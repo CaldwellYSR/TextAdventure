@@ -1,0 +1,47 @@
+{
+    "title": "Krypton",
+    "zones": {
+        "grand_entrance": { 
+            "title": "Grand Entrance", 
+            "description": "You're in an entry-way, there's a hallway to the north",
+            "start": true,
+            "game_over": false
+        },
+        "hallway": { 
+            "title": "Hallway", 
+            "description": "The hallway is long and there is a staircase at the end",
+            "start": false,
+            "game_over": false
+        },
+        "staircase": { 
+            "title": "Staircase", 
+            "description": "Looking up, you cannot see the top of the staircase. You only see darkness",
+            "start": false,
+            "game_over": false
+
+        },
+        "bottomless_pit": { 
+            "title": "Elevator", 
+            "description": "The door opens and you step out into empty air. As you fall, you reflect on why you tried taking the elevator in a two story house to begin with.",
+            "start": false,
+            "game_over": true
+        },
+        "up_stairs": { 
+            "title": "Up the stairs", 
+            "description": "After what feels like thirty or so more steps, you still cannot see the top. Looking back, you see that you're only 3 steps from the bottom.",
+            "start": false,
+            "game_over": false
+
+        }
+    },
+    "connectors": [
+        { "to_id": "grand_entrance", "from_id": "hallway", "direction": "south" }, 
+        { "to_id": "hallway", "from_id": "grand_entrance", "direction": "north" }, 
+        { "to_id": "hallway", "from_id": "staircase", "direction": "south" }, 
+        { "to_id": "staircase", "from_id": "hallway", "direction": "north" }, 
+        { "to_id": "staircase", "from_id": "up_stairs", "direction": "south" }, 
+        { "to_id": "bottomless_pit", "from_id": "hallway", "direction": "west" },
+        { "to_id": "up_stairs", "from_id": "staircase", "direction": "north" }, 
+        { "to_id": "up_stairs", "from_id": "up_stairs", "direction": "north" }
+    ]
+}

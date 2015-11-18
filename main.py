@@ -2,7 +2,7 @@
 
 from models import Player, Item, Zone, Connector, World
 from fsm import StateMachine
-import json, sys
+import sys
 
 class controller(object):
     def __init__(self, world=""):
@@ -14,41 +14,11 @@ class controller(object):
             except IndexError:
                 print "You didn't include a file"
                 sys.exit(0)
-            self._make_world(f)
+            self.world = World(f)
         else:
-            room1 = Zone("Grand Entrance")
-            room2 = Zone("Grand Hallway")
-            room3 = Zone("Grand Staircase")
-            conn = Connector(room1)
-            room2.add_connector(conn, 'south')
-            conn = Connector(room2)
-            room1.add_connector(conn, 'north')
-            room3.add_connector(conn, 'south')
-            conn = Connector(room3)
-            room2.add_connector(conn, 'north')
-            room3.add_connector(conn, 'north')
-            self.start_room = room1
+            self.world = World()
+        self.start_zone = self.world.start()
  
-    def _make_world(self, path):
-        json_data = open(path, 'r').read()
-        data = json.loads(json_data)
-        self.world = World(data["title"])
-        room1 = Zone("Grand Entrance")
-        room2 = Zone("Grand Hallway")
-        room3 = Zone("Grand Staircase")
-        conn = Connector(room1)
-        room2.add_connector(conn, 'south')
-        conn = Connector(room2)
-        room1.add_connector(conn, 'north')
-        room3.add_connector(conn, 'south')
-        conn = Connector(room3)
-        room2.add_connector(conn, 'north')
-        room3.add_connector(conn, 'north')
-        self.world.add_zone(room1)
-        self.world.add_zone(room2)
-        self.world.add_zone(room3)
-        self.start_room = self.world.zones[0]
-
     def setup(self, current_room):
         choice = raw_input("What is your name? (Leave blank default: 'Madeleine') ")
         if len(choice) > 0:
@@ -59,12 +29,15 @@ class controller(object):
         return ("Describe Surrounding", current_room)
         
     def describe_surrounding(self, current_room):
-        print current_room.name
+        current_room.describe()
+        if current_room.game_over:
+            return ("End Game", current_room)
         print
         print "Exits:"
         print "====================="
         for direction in current_room.exits:
             print direction + " => " + str(current_room.exits[direction].destination)
+        print
         return ("Prompt Input", current_room)
 
     def prompt(self, current_room):
@@ -85,7 +58,7 @@ class controller(object):
             return ("Prompt Input", current_room)
 
     def end_game(self, current_room):
-        print "You ended the game in " + current_room.name
+        print "You ended the game in the " + current_room.name
         
 if __name__ == "__main__":
     c = controller()
@@ -95,4 +68,4 @@ if __name__ == "__main__":
     c.fsm.add_state("Prompt Input", c.prompt)
     c.fsm.add_state("End Game", c.end_game, end_state=True)
     c.fsm.set_start("Get Player Info")
-    c.fsm.run(c.start_room)
+    c.fsm.run(c.start_zone)
