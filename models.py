@@ -1,9 +1,12 @@
-#!./env/bin/python
+class Item(object):
+    def __init__(self, name="Bag of Holding"):
+        self.name = name
 
-from Item import Item
+    def __str__(self):
+        return self.name
 
 class Player(object):
-    def __init__(self, name = "Madeleine"):
+    def __init__(self, name="Madeleine"):
         self.name = name
         self.inventory = []
 
@@ -19,3 +22,7 @@ class Player(object):
 
     def pickup_item(self, item=Item()):
         self.inventory.append(item)
+
+class Room(object):
+    def __init__(self, name="Empty Void"):
+        self.name = name
