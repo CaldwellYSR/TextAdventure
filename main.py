@@ -1,4 +1,4 @@
-#!./env/bin/python
+#!./env/bin/python 
 
 from models import Player, Item, Zone, Connector, World
 from fsm import StateMachine
