@@ -41,3 +41,17 @@ class Zone(object):
 
     def add_connector(self, connector, direction):
         self.exits[direction] = connector
+
+class World(object):
+    def __init__(self, title="Luigi's Mansion"):
+        self.title = title
+        self.zones = []
+
+    def __str__(self):
+        return self.title
+
+    def add_zone(self, zone):
+        self.zones.append(zone)
+
+    def add_start_zone(self, zone):
+        self.zones.insert(0, zone)

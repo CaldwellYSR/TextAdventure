@@ -1,12 +1,38 @@
 #!./env/bin/python
 
-from models import Player, Item, Zone, Connector
+from models import Player, Item, Zone, Connector, World
 from fsm import StateMachine
+import json, sys
 
 class controller(object):
-    def __init__(self):
+    def __init__(self, world=""):
         self.fsm = StateMachine()
         self.player = Player()
+        if '-f' in sys.argv:
+            try:
+                f = sys.argv[sys.argv.index('-f') + 1]
+            except IndexError:
+                print "You didn't include a file"
+                sys.exit(0)
+            self._make_world(f)
+        else:
+            room1 = Zone("Grand Entrance")
+            room2 = Zone("Grand Hallway")
+            room3 = Zone("Grand Staircase")
+            conn = Connector(room1)
+            room2.add_connector(conn, 'south')
+            conn = Connector(room2)
+            room1.add_connector(conn, 'north')
+            room3.add_connector(conn, 'south')
+            conn = Connector(room3)
+            room2.add_connector(conn, 'north')
+            room3.add_connector(conn, 'north')
+            self.start_room = room1
+ 
+    def _make_world(self, path):
+        json_data = open(path, 'r').read()
+        data = json.loads(json_data)
+        self.world = World(data["title"])
         room1 = Zone("Grand Entrance")
         room2 = Zone("Grand Hallway")
         room3 = Zone("Grand Staircase")
@@ -18,14 +44,17 @@ class controller(object):
         conn = Connector(room3)
         room2.add_connector(conn, 'north')
         room3.add_connector(conn, 'north')
-        self.start_room = room1
- 
+        self.world.add_zone(room1)
+        self.world.add_zone(room2)
+        self.world.add_zone(room3)
+        self.start_room = self.world.zones[0]
+
     def setup(self, current_room):
         choice = raw_input("What is your name? (Leave blank default: 'Madeleine') ")
         if len(choice) > 0:
             self.player.set_name(choice)
         print "Hello, " + self.player.name
-        print "Welcome to Luigi's Mansion (I know... unoriginal)"
+        print "Welcome to " + self.world.title
         print
         return ("Describe Surrounding", current_room)
         
