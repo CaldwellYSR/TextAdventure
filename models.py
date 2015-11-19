@@ -14,13 +14,18 @@ class Item(object):
     def __str__(self):
         return self.name
 
-    def use(self, target):
+    def describe(self, inventory):
+        print self.name + ": " + self.description
+        if inventory:
+            print "In inventory, type 'use " + self.name.lower() + "' to use it"
+
+    def use(self, target, current_room=None):
         if self.heal:
             print "You heal " + str(self.amount) + " health points to " + str(target)
             target.heal(self.amount, self.permanent)
         else:
             print "You deal " + str(self.amount) + " damage to " + str(target) 
-            target.damage(self.amount, self.permanent)
+            target.damage(self.amount, self.permanent, current_room)
 
 # TODO Special Item Class for Keys and other Special Story Items or Required Items
 
@@ -31,6 +36,7 @@ class Character(object):
         self.inventory = inventory
         self.hp = 100
         self.max_hp = 100
+        self.alive = True
 
     def __str__(self):
         return self.name
@@ -40,10 +46,13 @@ class Character(object):
         if self.hp > self.max_hp:
             self.hp = self.max_hp
 
-    def damage(self, amount, permanent):
+    def damage(self, amount, permanent, zone):
         self.hp -= amount
         if self.hp <= 0:
-            return ("Player Died", args)
+            self.alive = False
+            
+    def describe(self):
+        pass
 
 # Specific type of character that has item inventory helper functions
 class Player(Character):
@@ -65,7 +74,18 @@ class Player(Character):
         print "=================================================="
         for item in self.inventory:
             print item
-        return ("Describe Surrounding", args)
+        return ("Prompt Input", args)
+    
+    def describe(self, args):
+        print "HP: " + str(self.hp) + "/" + str(self.max_hp)
+        print
+        return ("Check Inventory", args)
+
+    def damage(self, amount, permanent, zone):
+        super(Player, self).damage(amount, permanent, zone)
+        if not self.alive:
+            args = { "current_zone": zone }
+            return ("Player Died", args)
     
 # Connects two world zones together
 class Connector(object):
@@ -97,12 +117,15 @@ class Zone(object):
         del(self.items[item.name.lower()])
 
     # Describe this zone
-    def describe(self):
+    def describe(self, args):
         print self.name
         print
-        print self.description
+        for line in args['text_wrap'].wrap(self.description):
+            print line
         if self.game_over:
-            return ("Player Died", args)
+            args["player_dead"] = True
+            print
+        return args
     
     # Describe exits, items, and TODO (other characters) in this room
     def look(self):
