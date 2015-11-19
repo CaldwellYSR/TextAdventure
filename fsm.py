@@ -1,5 +1,21 @@
 #!./env/bin/python
 
+#############################################################
+# Simple Finite State Machine                               #
+#############################################################
+# To use, initialize a new instance of StateMachine         #
+# then use the `add_state` method to pair functions to      #
+# string identifiers.                                       #
+#                                                           #
+# Make sure to set a starting state with `set_start`        #
+#                                                           #
+# Finally, `run` the FSM to loop through your states.       #
+#                                                           #
+# Each state function should return a tuple with a string   #
+# Identifying the next state and a dictionary with any      #
+# arguments you need to pass along                          #
+#############################################################
+
 class StateMachine:
     def __init__(self):
         self.handlers = {}
