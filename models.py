@@ -2,25 +2,50 @@ import json, sys
 import pprint
 
 class Item(object):
-    def __init__(self, name="Bag of Holding"):
+    def __init__(self, name="Minor Healing Potion", description="Return some health", heal=True, amount=15, permanent=False):
         self.name = name
+        self.description = description
+        self.heal = heal
+        self.damage = not heal
+        self.permanent = permanent
 
     def __str__(self):
         return self.name
 
-class Player(object):
-    def __init__(self, name="Madeleine"):
+    def use(self, args):
+        if self.heal:
+            args['target'].heal(self.amount, self.permanent, args)
+        else:
+            args['target'].damage(self.amount, self.permanent, args)
+        del(args['target'])
+        return ("Prompt Input", args)
+
+class Character(object):
+    def __init__(self, name="Madeleine", inventory=[]):
         self.name = name
-        self.inventory = []
+        self.inventory = inventory
+        self.hp = 100
+        self.max_hp = 100
 
     def __str__(self):
         return self.name
+
+    def heal(self, amount, permanent, args):
+        self.hp += amount
+        if self.hp > self.max_hp:
+            self.hp = self.max_hp
+
+    def damage(self, amount, permanent, args):
+        self.hp -= amount
+        if self.hp <= 0:
+            return ("Player Died", args)
+
+class Player(Character):
+    def set_name(self, name):
+        self.name = name
 
     def pickup_item(self, item=Item()):
         self.inventory.append(item)
-
-    def set_name(self, name):
-        self.name = name
 
     def check_inventory(self, args):
         print self.name + "'s Inventory"
@@ -28,7 +53,7 @@ class Player(object):
         for item in self.inventory:
             print item
         return ("Describe Surrounding", args)
-
+    
 class Connector(object):
     def __init__(self, destination):
         self.destination = destination

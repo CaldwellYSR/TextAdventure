@@ -6,8 +6,10 @@ import sys
 
 class controller(object):
     def __init__(self, world=""):
+        # Initialize FSM and Player Character
         self.fsm = StateMachine()
         self.player = Player()
+        # Accept world file from command line using -f flag
         if '-f' in sys.argv:
             try:
                 f = sys.argv[sys.argv.index('-f') + 1]
@@ -17,55 +19,77 @@ class controller(object):
             self.world = World(f)
         else:
             self.world = World()
+        # Set initial "Zone" to start character in
         self.start_zone = self.world.start()
  
-    def setup(self, current_room):
+    # Get player's name and start game
+    def setup(self, args):
         choice = raw_input("What is your name? (Leave blank default: 'Madeleine') ")
         if len(choice) > 0:
             self.player.set_name(choice)
         print "Hello, " + self.player.name
         print "Welcome to " + self.world.title
         print
-        return ("Describe Surrounding", current_room)
+        return ("Describe Surrounding", args)
+
+    #TODO Set up instructions state to read helpfile based on command line flag
         
-    def describe_surrounding(self, current_room):
-        current_room.describe()
-        if current_room.game_over:
-            return ("End Game", current_room)
+    # Describe current world zone
+    def describe_surrounding(self, args):
+        args['current_zone'].describe()
+        if args['current_zone'].game_over:
+            return ("Player Died", args)
         print
         print "Exits:"
         print "====================="
-        for direction in current_room.exits:
-            print direction + " => " + str(current_room.exits[direction].destination)
+        for direction in args['current_zone'].exits:
+            print direction + " => " + str(args['current_zone'].exits[direction].destination)
         print
-        return ("Prompt Input", current_room)
+        return ("Prompt Input", args)
 
-    def prompt(self, current_room):
+    # Request and parse user input
+    # TODO Make better input handling logic
+    def prompt(self, args):
         choice = raw_input("What's next? ")
+        # If nothing was input, try again
         if len(choice) <= 0:
             print "Ummm..."
-            return ("Prompt Input", current_room)
+            return ("Prompt Input", args)
+        # If player chooses to exit
         if choice.lower() == 'exit' or choice.lower() == 'quit':
             print "Goodbye, " + self.player.name
-            return ("End Game", current_room)
+            return ("End Game", args)
+        # Check Inventory
         if choice.lower() == 'i' or choice.lower() == 'inventory':
-            return ("Check Inventory", current_room)
-        elif choice.lower() in current_room.exits:
-            current_room = current_room.exits[choice.lower()].destination
-            return ("Describe Surrounding", current_room)
+            return ("Check Inventory", args)
+        # Input matches exit direction
+        elif choice.lower() in args['current_zone'].exits:
+            args['current_zone'] = args['current_zone'].exits[choice.lower()].destination
+            return ("Describe Surrounding", args)
+        # TODO Use Item
+        # TODO Pickup Item
+        # TODO Display Help
         else:
-            print "Ouch, no exit there"
-            return ("Prompt Input", current_room)
+            print "Sorry, I don't recognize that command"
+            return ("Prompt Input", args)
 
-    def end_game(self, current_room):
-        print "You ended the game in the " + current_room.name
+    # Player chose to quit
+    def end_game(self, args):
+        print "You quit the game in the " + args['current_zone'].name
+
+    # Player's body chose for him
+    def player_died(self, args):
+        print "Sorry " + str(self.player) + ", you died in the " + str(args['current_zone'])
         
 if __name__ == "__main__":
+    # Initialize Controller and FSM States
     c = controller()
     c.fsm.add_state("Get Player Info", c.setup)
     c.fsm.add_state("Check Inventory", c.player.check_inventory)
     c.fsm.add_state("Describe Surrounding", c.describe_surrounding)
     c.fsm.add_state("Prompt Input", c.prompt)
     c.fsm.add_state("End Game", c.end_game, end_state=True)
+    c.fsm.add_state("Player Died", c.player_died, end_state=True)
+    # Set initial state and run game with necessary arguments
     c.fsm.set_start("Get Player Info")
-    c.fsm.run(c.start_zone)
+    c.fsm.run({ "current_zone": c.start_zone, "player": c.player })

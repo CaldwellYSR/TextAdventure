@@ -15,7 +15,7 @@ class StateMachine:
     def set_start(self, name):
         self.startState = name.upper()
 
-    def run(self, cargo):
+    def run(self, args):
         try:
             handler = self.handlers[self.startState]
         except:
@@ -24,10 +24,10 @@ class StateMachine:
             raise  InitializationError("at least one state must be an end_state")
     
         while True:
-            (newState, cargo) = handler(cargo)
+            (newState, args) = handler(args)
             if newState.upper() in self.endStates:
                 handler = self.handlers[newState.upper()]  
-                handler(cargo)
+                handler(args)
                 break 
             else:
                 handler = self.handlers[newState.upper()]  
