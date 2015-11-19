@@ -37,14 +37,6 @@ class controller(object):
     # Describe current world zone
     def describe_surrounding(self, args):
         args['current_zone'].describe()
-        if args['current_zone'].game_over:
-            return ("Player Died", args)
-        print
-        print "Exits:"
-        print "====================="
-        for direction in args['current_zone'].exits:
-            print direction + " => " + str(args['current_zone'].exits[direction].destination)
-        print
         return ("Prompt Input", args)
 
     # Request and parse user input
@@ -66,8 +58,18 @@ class controller(object):
         elif choice.lower() in args['current_zone'].exits:
             args['current_zone'] = args['current_zone'].exits[choice.lower()].destination
             return ("Describe Surrounding", args)
-        # TODO Use Item
         # TODO Pickup Item
+        elif choice.lower() == 'look' or choice.lower() == 'look around':
+            args['current_zone'].look()
+            return ("Prompt Input", args)
+        elif choice.lower()[:4] == 'take':
+            if choice.lower()[5:] in args['current_zone'].items:
+                self.player.pickup_item(args['current_zone'], args['current_zone'].items[choice.lower()[5:]])
+                return ("Prompt Input", args)
+            else:
+                print "That item doesn't seem to be here"
+                return ("Prompt Input", args)
+        # TODO Use Item
         # TODO Display Help
         else:
             print "Sorry, I don't recognize that command"
@@ -92,4 +94,4 @@ if __name__ == "__main__":
     c.fsm.add_state("Player Died", c.player_died, end_state=True)
     # Set initial state and run game with necessary arguments
     c.fsm.set_start("Get Player Info")
-    c.fsm.run({ "current_zone": c.start_zone, "player": c.player })
+    c.fsm.run({ "current_zone": c.start_zone })

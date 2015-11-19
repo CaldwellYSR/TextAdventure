@@ -44,8 +44,10 @@ class Player(Character):
     def set_name(self, name):
         self.name = name
 
-    def pickup_item(self, item=Item()):
+    def pickup_item(self, zone, item=Item()):
+        print "You just picked up a " + item.name
         self.inventory.append(item)
+        zone.remove_item(item)
 
     def check_inventory(self, args):
         print self.name + "'s Inventory"
@@ -64,6 +66,7 @@ class Zone(object):
         self.description = description
         self.game_over = game_over
         self.exits = {}
+        self.items = {}
     
     def __str__(self):
         return self.name
@@ -71,30 +74,62 @@ class Zone(object):
     def add_connector(self, connector, direction):
         self.exits[direction] = connector
 
+    def add_item(self, item):
+        self.items[item.name.lower()] = item
+
+    def remove_item(self, item):
+        del(self.items[item.name.lower()])
+
+    # Describe this zone
     def describe(self):
         print self.name
         print
         print self.description
+        if self.game_over:
+            return ("Player Died", args)
+    
+    # Describe exits, items, and TODO (other characters) in this room
+    def look(self):
+        print "Exits:"
+        print "====================="
+        for direction in self.exits:
+            print direction + " => " + str(self.exits[direction].destination)
+        print
+        print "Items:"
+        print "====================="
+        for id, item in self.items.items():
+            print item.name + ': ' + item.description
+        print
 
+
+# World class parses json file to generate the world full of
+# zones, connectors, items, TODO add enemy characters
 class World(object):
     def __init__(self, f='world.json'):
         self.zones = {}
+        # Read JSON File
         json_data = open(f, 'r').read()
         data = json.loads(json_data)
         self.title = data['title']
         tmp = None
-        #pp = pprint.PrettyPrinter(indent=4)
-        #pp.pprint(data)
         world_zones = data['zones']
         connectors = data['connectors']
+        items = data['items']
+        # Generate Zones
         for count, z in enumerate(world_zones):
             tmp = Zone(world_zones[z]['title'], world_zones[z]['description'], world_zones[z]['game_over'])
             self._add_zone(str(z), tmp)
             if world_zones[z]['start']:
                 self._set_start_zone(z)
+        # Generate Connectors
         for c in connectors:
             conn = Connector(self.zones[c['to_id']])
             self.zones[c['from_id']].add_connector(conn, c['direction'])
+        # Generate Items
+        for item in items:
+            i = Item(item['name'], item['description'], item['heal'], item['amount'], item['permanent'])
+            self.zones[item['room_id']].add_item(i)
+        # TODO Generate other characters
 
     def __str__(self):
         return self.title
