@@ -35,13 +35,55 @@
         }
     },
     "connectors": [
-        { "to_id": "grand_entrance", "from_id": "hallway", "direction": "south" }, 
-        { "to_id": "hallway", "from_id": "grand_entrance", "direction": "north" }, 
-        { "to_id": "hallway", "from_id": "staircase", "direction": "south" }, 
-        { "to_id": "staircase", "from_id": "hallway", "direction": "north" }, 
-        { "to_id": "staircase", "from_id": "up_stairs", "direction": "south" }, 
-        { "to_id": "bottomless_pit", "from_id": "hallway", "direction": "west" },
-        { "to_id": "up_stairs", "from_id": "staircase", "direction": "north" }, 
-        { "to_id": "up_stairs", "from_id": "up_stairs", "direction": "north" }
+        { 
+            "to_id": "grand_entrance", 
+            "from_id": "hallway", 
+            "direction": "south" 
+        }, 
+        { 
+            "to_id": "hallway", 
+            "from_id": "grand_entrance", 
+            "direction": "north" 
+        }, 
+        { 
+            "to_id": "hallway", 
+            "from_id": "staircase", 
+            "direction": "south" 
+        }, 
+        { 
+            "to_id": "staircase", 
+            "from_id": "hallway", 
+            "direction": "north" 
+        }, 
+        { 
+            "to_id": "staircase", 
+            "from_id": "up_stairs", 
+            "direction": "south" 
+        }, 
+        { 
+            "to_id": "bottomless_pit", 
+            "from_id": "hallway", 
+            "direction": "west"
+        },
+        { 
+            "to_id": "up_stairs", 
+            "from_id": "staircase", 
+            "direction": "north" 
+        }, 
+        { 
+            "to_id": "up_stairs", 
+            "from_id": "up_stairs", 
+            "direction": "north" 
+        }
+    ],
+    "items": [
+        { 
+            "room_id": "grand_entrance", 
+            "name": "Healing Vial", 
+            "description": "Heal a small amount", 
+            "heal": true, 
+            "amount": 10, 
+            "permanent": false
+        }
     ]
 }
