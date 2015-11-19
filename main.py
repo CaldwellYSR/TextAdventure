@@ -51,6 +51,8 @@ class controller(object):
         if choice.lower() == 'exit' or choice.lower() == 'quit':
             print "Goodbye, " + self.player.name
             return ("End Game", args)
+        # TODO Display Help
+        # TODO Examine Self
         # Check Inventory
         if choice.lower() == 'i' or choice.lower() == 'inventory':
             return ("Check Inventory", args)
@@ -58,7 +60,7 @@ class controller(object):
         elif choice.lower() in args['current_zone'].exits:
             args['current_zone'] = args['current_zone'].exits[choice.lower()].destination
             return ("Describe Surrounding", args)
-        # TODO Pickup Item
+        # Pickup Item
         elif choice.lower() == 'look' or choice.lower() == 'look around':
             args['current_zone'].look()
             return ("Prompt Input", args)
@@ -69,8 +71,23 @@ class controller(object):
             else:
                 print "That item doesn't seem to be here"
                 return ("Prompt Input", args)
-        # TODO Use Item
-        # TODO Display Help
+        # Drop Item
+        elif choice .lower()[:4] == 'drop':
+            if choice.lower()[5:] in self.player.inventory:
+                self.player.drop_item(args['current_zone'], self.player.inventory[choice.lower()[5:]])
+                return ("Prompt Input", args)
+            else:
+                print "You don't have a " + choice[5:]
+                return ("Prompt Input", args)
+        # Use Item
+        # TODO Maybe use "on" to select a target for item
+        elif choice .lower()[:3] == 'use':
+            if choice.lower()[4:] in self.player.inventory:
+                if self.player.inventory[choice.lower()[4:]].heal:
+                    self.player.inventory[choice.lower()[4:]].use(self.player)
+                else:
+                    self.player.inventory[choice.lower()[4:]].use(args['current_zone'].characters.pop())
+                return ("Prompt Input", args)
         else:
             print "Sorry, I don't recognize that command"
             return ("Prompt Input", args)

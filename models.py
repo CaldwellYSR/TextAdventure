@@ -1,27 +1,32 @@
 import json, sys
 import pprint
 
+# Base item class
 class Item(object):
     def __init__(self, name="Minor Healing Potion", description="Return some health", heal=True, amount=15, permanent=False):
         self.name = name
         self.description = description
         self.heal = heal
         self.damage = not heal
+        self.amount = amount
         self.permanent = permanent
 
     def __str__(self):
         return self.name
 
-    def use(self, args):
+    def use(self, target):
         if self.heal:
-            args['target'].heal(self.amount, self.permanent, args)
+            print "You heal " + str(self.amount) + " health points to " + str(target)
+            target.heal(self.amount, self.permanent)
         else:
-            args['target'].damage(self.amount, self.permanent, args)
-        del(args['target'])
-        return ("Prompt Input", args)
+            print "You deal " + str(self.amount) + " damage to " + str(target) 
+            target.damage(self.amount, self.permanent)
 
+# TODO Special Item Class for Keys and other Special Story Items or Required Items
+
+# Base Character Class with damage and healing logic
 class Character(object):
-    def __init__(self, name="Madeleine", inventory=[]):
+    def __init__(self, name="Madeleine", inventory={}):
         self.name = name
         self.inventory = inventory
         self.hp = 100
@@ -30,24 +35,30 @@ class Character(object):
     def __str__(self):
         return self.name
 
-    def heal(self, amount, permanent, args):
+    def heal(self, amount, permanent):
         self.hp += amount
         if self.hp > self.max_hp:
             self.hp = self.max_hp
 
-    def damage(self, amount, permanent, args):
+    def damage(self, amount, permanent):
         self.hp -= amount
         if self.hp <= 0:
             return ("Player Died", args)
 
+# Specific type of character that has item inventory helper functions
 class Player(Character):
     def set_name(self, name):
         self.name = name
 
     def pickup_item(self, zone, item=Item()):
         print "You just picked up a " + item.name
-        self.inventory.append(item)
+        self.inventory[item.name.lower()] = item
         zone.remove_item(item)
+
+    def drop_item(self, zone, item):
+        print "You just dropped a " + item.name
+        del(self.inventory[item.name.lower()])
+        zone.add_item(item)
 
     def check_inventory(self, args):
         print self.name + "'s Inventory"
@@ -56,10 +67,12 @@ class Player(Character):
             print item
         return ("Describe Surrounding", args)
     
+# Connects two world zones together
 class Connector(object):
     def __init__(self, destination):
         self.destination = destination
 
+# Zone class describes an area in the world, if game_over=True this room will cause an end state
 class Zone(object):
     def __init__(self, name="Empty Void", description="Nothing here", game_over=False):
         self.name = name
@@ -67,13 +80,16 @@ class Zone(object):
         self.game_over = game_over
         self.exits = {}
         self.items = {}
+        self.characters = []
     
     def __str__(self):
         return self.name
 
+    # Add exits
     def add_connector(self, connector, direction):
         self.exits[direction] = connector
 
+    # Handling items in this zone
     def add_item(self, item):
         self.items[item.name.lower()] = item
 
