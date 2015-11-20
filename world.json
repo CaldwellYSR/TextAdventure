@@ -78,7 +78,7 @@
     ],
     "items": [
         { 
-            "room_id": "grand_entrance", 
+            "zone_id": "grand_entrance", 
             "name": "Healing Vial", 
             "description": "Heal a small amount", 
             "heal": true, 

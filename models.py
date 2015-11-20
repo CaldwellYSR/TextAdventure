@@ -167,7 +167,7 @@ class World(object):
         # Generate Items
         for item in items:
             i = Item(item['name'], item['description'], item['heal'], item['amount'], item['permanent'])
-            self.zones[item['room_id']].add_item(i)
+            self.zones[item['zone_id']].add_item(i)
         # TODO Generate other characters
 
     def __str__(self):
