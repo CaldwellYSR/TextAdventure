@@ -65,7 +65,7 @@ class controller(object):
             print "Ummm..."
             return ("Prompt Input", args)
         # If player chooses to exit
-        if choice.lower() == 'exit' or choice.lower() == 'quit':
+        if choice.lower() in ['exit', 'quit', 'q']:
             self._clear_screen()
             print "Goodbye, " + self.player.name
             return ("End Game", args)
