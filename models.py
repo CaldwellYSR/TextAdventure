@@ -1,5 +1,5 @@
 import json, sys
-import pprint
+from termcolor import colored
 
 # Base item class
 class Item(object):
