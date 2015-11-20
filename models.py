@@ -39,7 +39,7 @@ class Character(object):
         self.alive = True
 
     def __str__(self):
-        return self.name
+        return colored(self.name, 'green') if self.alive else colored(self.name, 'red')
 
     def heal(self, amount, permanent):
         self.hp += amount
