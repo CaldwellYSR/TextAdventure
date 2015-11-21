@@ -81,9 +81,25 @@
             "zone_id": "grand_entrance", 
             "name": "Healing Vial", 
             "description": "Heal a small amount", 
-            "heal": true, 
+            "type": "potion",
             "amount": 10, 
             "permanent": false
+        },
+        {
+            "zone_id": "grand_entrance",
+            "name": "Helmet",
+            "description": "It's a bucket",
+            "type": "armor",
+            "armor_rating": 10,
+            "body_part": "head"
+        },
+        {
+            "zone_id": "hallway",
+            "name": "Helmet 2.0",
+            "description": "It's a better bucket",
+            "type": "armor",
+            "armor_rating": 15,
+            "body_part": "head"
         }
     ],
     "characters": [

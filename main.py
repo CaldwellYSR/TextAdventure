@@ -59,94 +59,82 @@ class controller(object):
     def prompt(self, args):
         print()
         choice = input("What's next? ")
+        self._clear_screen()
         # If nothing was input, try again
         if len(choice) <= 0:
-            self._clear_screen()
             print("Ummm...")
             return ("Prompt Input", args)
         # If player chooses to exit
         if choice.lower() in ['exit', 'quit', 'q']:
-            self._clear_screen()
             print("Goodbye, " + self.player.name)
             return ("End Game", args)
         # TODO Display Help
         # TODO Examine Self
         if choice.lower()[:5] == 'check':
             if choice.lower()[6:] in ['self', 'myself', 'me']:
-                self._clear_screen()
                 return ("Examine Self", args)
             elif choice.lower()[6:] in ['bag', 'inventory', 'inv']:
-                self._clear_screen()
                 return ("Check Inventory", args)
             elif choice.lower()[6:] in self.player.inventory:
-                self._clear_screen()
                 print(self.player.inventory[choice.lower()[6:]].name)
                 print(self.player.inventory[choice.lower()[6:]].description)
                 print()
             else:
-                self._clear_screen()
                 print("Sorry, I don't recognize what you're trying to check")
             return ("Prompt Input", args)
         # Check Inventory
         if choice.lower() == 'i' or choice.lower() == 'inventory':
-            self._clear_screen()
             return ("Check Inventory", args)
+        # Equip Item
+        if choice.lower()[:5] == 'equip' and choice.lower()[6:] in self.player.inventory:
+            try:
+                self.player.equip(self.player.inventory[choice.lower()[6:]])
+            except TypeError as e:
+                print(e.strerror)
+                return ("Prompt Input", args)
+            print("You equipped the " + choice[6:])
+            return ("Prompt Input", args)
         # Input matches exit direction
-        elif choice.lower() in args['current_zone'].exits:
-            self._clear_screen()
+        if choice.lower() in args['current_zone'].exits:
             args['current_zone'] = args['current_zone'].exits[choice.lower()].destination
             return ("Describe Surrounding", args)
         # Examine Item in Zone
-        elif choice.lower()[:7] in ['examine', 'look at']:
+        if choice.lower()[:7] in ['examine', 'look at']:
             if choice.lower()[8:] in args['current_zone'].items:
-                self._clear_screen()
                 args['current_zone'].items[choice.lower()[8:]].describe(inventory=False)
             elif choice.lower()[8:] in self.player.inventory:
-                self._clear_screen()
                 self.player.inventory[choice.lower()[8:]].describe(inventory=True)
             else:
-                self._clear_screen()
                 print("That item doesn't seem to be here")
             return ("Prompt Input", args)
-        # Pickup Item
-        elif choice.lower() == 'look' or choice.lower() == 'look around':
-            self._clear_screen()
+        # Look around
+        if choice.lower() == 'look' or choice.lower() == 'look around':
             args['current_zone'].look()
             return ("Prompt Input", args)
-        elif choice.lower()[:4] == 'take':
+        # Pickup Item
+        if choice.lower()[:4] == 'take':
             if choice.lower()[5:] in args['current_zone'].items:
-                self._clear_screen()
                 self.player.pickup_item(args['current_zone'], args['current_zone'].items[choice.lower()[5:]])
                 return ("Prompt Input", args)
             else:
-                self._clear_screen()
                 print("That item doesn't seem to be here")
                 return ("Prompt Input", args)
         # Drop Item
-        elif choice .lower()[:4] == 'drop':
+        if choice .lower()[:4] == 'drop':
             if choice.lower()[5:] in self.player.inventory:
-                self._clear_screen()
                 self.player.drop_item(args['current_zone'], self.player.inventory[choice.lower()[5:]])
                 return ("Prompt Input", args)
             else:
-                self._clear_screen()
                 print("You don't have a " + choice[5:])
                 return ("Prompt Input", args)
         # Use Item
         # TODO Maybe use "on" to select a target for item
-        elif choice .lower()[:3] == 'use':
+        if choice .lower()[:3] == 'use':
             if choice.lower()[4:] in self.player.inventory:
-                if self.player.inventory[choice.lower()[4:]].heal:
-                    self._clear_screen()
-                    self.player.inventory[choice.lower()[4:]].use(self.player)
-                else:
-                    self._clear_screen()
-                    self.player.inventory[choice.lower()[4:]].use(args['current_zone'].characters.pop(), args['current_room'])
+                self.player.inventory[choice.lower()[4:]].use(self.player)
                 return ("Prompt Input", args)
-        else:
-            self._clear_screen()
-            print("Sorry, I don't recognize that command")
-            return ("Prompt Input", args)
+        print("Sorry, I don't recognize that command")
+        return ("Prompt Input", args)
 
     # Player chose to quit
     def end_game(self, args):

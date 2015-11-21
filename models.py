@@ -3,13 +3,9 @@ from termcolor import colored
 
 # Base item class
 class Item(object):
-    def __init__(self, name="Minor Healing Potion", description="Return some health", heal=True, amount=15, permanent=False):
+    def __init__(self, name="Minor Healing Potion", description="Return some health"):
         self.name = name
         self.description = description
-        self.heal = heal
-        self.damage = not heal
-        self.amount = amount
-        self.permanent = permanent
 
     def __str__(self):
         return self.name
@@ -18,14 +14,23 @@ class Item(object):
         print(self.name + ": " + self.description)
         if inventory:
             print("In inventory, type 'use " + self.name.lower() + "' to use it")
-
+    
+class Potion(Item):
+    def __init__(self, name="Minor Healing Potion", description="Return some health", amount=15, permanent=False):
+        super().__init__(name, description)
+        self.amount = amount
+        self.permanent = permanent
+        
     def use(self, target, current_room=None):
-        if self.heal:
-            print("You heal " + str(self.amount) + " health points to " + str(target))
-            target.heal(self.amount, self.permanent)
-        else:
-            print("You deal " + str(self.amount) + " damage to " + str(target)) 
-            target.damage(self.amount, self.permanent, current_room)
+        print("You heal " + str(self.amount) + " health points to " + str(target))
+        target.heal(self.amount, self.permanent)
+
+# TODO come up with better property name than 'body_part'
+class Armor(Item):
+    def __init__(self, name="Helmet", description="It's a bucket", body_part="head", armor_rating="10"):
+        super().__init__(name, description)
+        self.body_part = body_part
+        self.armor_rating = armor_rating
 
 # TODO Special Item Class for Keys and other Special Story Items or Required Items
 
@@ -38,11 +43,28 @@ class Character(object):
         self.hp = 100
         self.max_hp = 100
         self.alive = True
+        self.equipped = {
+            "weapon": None,
+            "arms": None,
+            "head": None,
+            "torso": None,
+            "legs": None
+        }
 
     def __str__(self):
-        return colored(self.name, 'green') if self.alive else colored(self.name, 'red')
+        return colored(self.name, 'green', attrs=['bold']) if self.alive else colored(self.name, 'red', attrs=['bold'])
+
+    def equip(self, item):
+        if not isinstance(item, Armor) and not isinstance(item, Weapon):
+            raise TypeError("You can only equip armor and weapons you imbecile")
+        if self.equipped[item.body_part] is not None:
+            self.inventory[self.equipped[item.body_part].name.lower()] = self.equipped[item.body_part]
+        self.equipped[item.body_part] = item
+        del(self.inventory[item.name.lower()])
 
     def heal(self, amount, permanent):
+        if permanent:
+            self.max_hp += amount
         self.hp += amount
         if self.hp > self.max_hp:
             self.hp = self.max_hp
@@ -74,15 +96,21 @@ class Player(Character):
         zone.add_item(item)
 
     def check_inventory(self, args):
+        print()
         print(self.name + "'s Inventory")
         print("==================================================")
-        for item in self.inventory:
+        for id, item in self.inventory.items():
             print(item)
         return ("Prompt Input", args)
     
     def describe(self, args):
-        print("HP: " + str(self.hp) + "/" + str(self.max_hp))
+        hp = colored(str(self.hp), 'green', attrs=['bold']) if self.hp >= self.max_hp * 0.4 else colored(str(self.hp), 'red', attrs=['bold'])
+        print("HP: " + hp + "/" + str(self.max_hp))
         print()
+        print("Equipped:")
+        print("==================================================")
+        for key, value in self.equipped.items():
+            print(colored(key.capitalize() + ": ", 'cyan', attrs=['bold']) + str(value))
         return ("Check Inventory", args)
 
     def damage(self, amount, permanent, zone):
@@ -144,7 +172,7 @@ class Zone(object):
         print("Items:")
         print("=====================")
         for id, item in self.items.items():
-            print(item.name + ': ' + item.description)
+            print(item)
         print()
 
 
@@ -187,7 +215,12 @@ class World(object):
 
     def _generate_items(self, items):
         for item in items:
-            i = Item(item['name'], item['description'], item['heal'], item['amount'], item['permanent'])
+            if item['type'] == 'potion':
+                i = Potion(item['name'], item['description'], item['amount'], item['permanent'])
+            elif item['type'] == 'armor':
+                i = Armor(item['name'], item['description'], item['body_part'], item['armor_rating'])
+            elif item['type'] == 'weapon':
+                i = Weapon()
             self.zones[item['zone_id']].add_item(i)
 
 
