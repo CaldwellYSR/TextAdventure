@@ -13,7 +13,7 @@ class Item(object):
     def describe(self, inventory):
         print(self.name + ": " + self.description)
         if inventory:
-            print("In inventory, type 'use " + self.name.lower() + "' to use it")
+            print(self.name + "Is in your inventory, type 'use " + self.name.lower() + "' to use it")
     
 class Potion(Item):
     def __init__(self, name="Minor Healing Potion", description="Return some health", amount=15, permanent=False):
@@ -69,6 +69,7 @@ class Character(object):
         if self.hp > self.max_hp:
             self.hp = self.max_hp
 
+    # TODO soak damage with armor
     def damage(self, amount, permanent, zone):
         self.hp -= amount
         if self.hp <= 0:
