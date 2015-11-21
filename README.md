@@ -49,19 +49,27 @@ This is a dummy world for now. Eventually this type of file could be use to gene
             "zone_id": "id of the zone where this item is found",
             "name": "item name",
             "description": "item description",
-            "heal": bool,
-            "amount": int,
-            "permanent": bool
+            "type": "potion"
         }
+    ],
+    "characters": [
+        "zone_id": "id of the zone where this character is found",
+        "name": "character name",
+        "description": "character description",
+        "max_hp": "int",
+        "hp": "int",
+        "inventory": [
+        ]
     ]
 }
 ```
 
-Zones >> Start = (is this the starting zone for this world?)
-Zones >> game_over = (does entering this zone end the game, either via death or winning)
-Items >> heal = (does this item heal you?)
-Items >> amount = (amount of healing or damage this item does)
-Items >> permanent = (does this item affect max health?)
+Zones >> Start = (is this the starting zone for this world?)  
+Zones >> game_over = (does entering this zone end the game, either via death or winning)  
+Items >> type = (`potion` `armor` or `weapon`)  
+    Each of these item types come with their own extra arguments. See the appropriate class in `models.py` for a better explanation  
+Characters >> inventory = ( a list of `Item`s formatted just like the `items` section above with the extra `equipped` bool )  
+
 
 ### Contacting Me:
 I will answer any Issues you open on the site. Outside of that, you can email me at `caldwellysr@gmail.com`
