@@ -15,24 +15,25 @@ class Item(object):
         return self.name
 
     def describe(self, inventory):
-        print self.name + ": " + self.description
+        print(self.name + ": " + self.description)
         if inventory:
-            print "In inventory, type 'use " + self.name.lower() + "' to use it"
+            print("In inventory, type 'use " + self.name.lower() + "' to use it")
 
     def use(self, target, current_room=None):
         if self.heal:
-            print "You heal " + str(self.amount) + " health points to " + str(target)
+            print("You heal " + str(self.amount) + " health points to " + str(target))
             target.heal(self.amount, self.permanent)
         else:
-            print "You deal " + str(self.amount) + " damage to " + str(target) 
+            print("You deal " + str(self.amount) + " damage to " + str(target)) 
             target.damage(self.amount, self.permanent, current_room)
 
 # TODO Special Item Class for Keys and other Special Story Items or Required Items
 
 # Base Character Class with damage and healing logic
 class Character(object):
-    def __init__(self, name="Madeleine", inventory={}):
+    def __init__(self, name="Madeleine", description="Beautiful", hp=100, max_hp=100, inventory={}):
         self.name = name
+        self.description = description
         self.inventory = inventory
         self.hp = 100
         self.max_hp = 100
@@ -56,29 +57,32 @@ class Character(object):
 
 # Specific type of character that has item inventory helper functions
 class Player(Character):
+    def __init__(self):
+        return super().__init__()
+
     def set_name(self, name):
         self.name = name
 
     def pickup_item(self, zone, item=Item()):
-        print "You just picked up a " + item.name
+        print("You just picked up a " + item.name)
         self.inventory[item.name.lower()] = item
         zone.remove_item(item)
 
     def drop_item(self, zone, item):
-        print "You just dropped a " + item.name
+        print("You just dropped a " + item.name)
         del(self.inventory[item.name.lower()])
         zone.add_item(item)
 
     def check_inventory(self, args):
-        print self.name + "'s Inventory"
-        print "=================================================="
+        print(self.name + "'s Inventory")
+        print("==================================================")
         for item in self.inventory:
-            print item
+            print(item)
         return ("Prompt Input", args)
     
     def describe(self, args):
-        print "HP: " + str(self.hp) + "/" + str(self.max_hp)
-        print
+        print("HP: " + str(self.hp) + "/" + str(self.max_hp))
+        print()
         return ("Check Inventory", args)
 
     def damage(self, amount, permanent, zone):
@@ -100,7 +104,7 @@ class Zone(object):
         self.game_over = game_over
         self.exits = {}
         self.items = {}
-        self.characters = []
+        self.characters = {}
     
     def __str__(self):
         return self.name
@@ -108,6 +112,9 @@ class Zone(object):
     # Add exits
     def add_connector(self, connector, direction):
         self.exits[direction] = connector
+
+    def add_character(self, character):
+        self.characters[character.name.lower()] = character
 
     # Handling items in this zone
     def add_item(self, item):
@@ -118,27 +125,27 @@ class Zone(object):
 
     # Describe this zone
     def describe(self, args):
-        print self.name
-        print
+        print(self.name)
+        print()
         for line in args['text_wrap'].wrap(self.description):
-            print line
+            print(line)
         if self.game_over:
             args["player_dead"] = True
-            print
+            print()
         return args
     
     # Describe exits, items, and TODO (other characters) in this room
     def look(self):
-        print "Exits:"
-        print "====================="
+        print("Exits:")
+        print("=====================")
         for direction in self.exits:
-            print direction + " => " + str(self.exits[direction].destination)
-        print
-        print "Items:"
-        print "====================="
+            print(direction + " => " + str(self.exits[direction].destination))
+        print()
+        print("Items:")
+        print("=====================")
         for id, item in self.items.items():
-            print item.name + ': ' + item.description
-        print
+            print(item.name + ': ' + item.description)
+        print()
 
 
 # World class parses json file to generate the world full of
@@ -150,25 +157,14 @@ class World(object):
         json_data = open(f, 'r').read()
         data = json.loads(json_data)
         self.title = data['title']
-        tmp = None
-        world_zones = data['zones']
-        connectors = data['connectors']
-        items = data['items']
         # Generate Zones
-        for count, z in enumerate(world_zones):
-            tmp = Zone(world_zones[z]['title'], world_zones[z]['description'], world_zones[z]['game_over'])
-            self._add_zone(str(z), tmp)
-            if world_zones[z]['start']:
-                self._set_start_zone(z)
+        self._generate_zones(data['zones'])
         # Generate Connectors
-        for c in connectors:
-            conn = Connector(self.zones[c['to_id']])
-            self.zones[c['from_id']].add_connector(conn, c['direction'])
+        self._generate_connectors(data['connectors'])
         # Generate Items
-        for item in items:
-            i = Item(item['name'], item['description'], item['heal'], item['amount'], item['permanent'])
-            self.zones[item['zone_id']].add_item(i)
-        # TODO Generate other characters
+        self._generate_items(data['items'])
+        # Generate other characters
+        self._generate_characters(data['characters'])
 
     def __str__(self):
         return self.title
@@ -178,6 +174,29 @@ class World(object):
 
     def _set_start_zone(self, id):
         self.start_zone = self.zones[id]
+
+    def _generate_characters(self, characters):
+        for c in characters:
+            char = Character(c['name'], c['description'], c['hp'], c['max_hp'], c['inventory'])
+            self.zones[c['zone_id']].add_character(char)
+
+    def _generate_connectors(self, connectors):
+        for c in connectors:
+            conn = Connector(self.zones[c['to_id']])
+            self.zones[c['from_id']].add_connector(conn, c['direction'])
+
+    def _generate_items(self, items):
+        for item in items:
+            i = Item(item['name'], item['description'], item['heal'], item['amount'], item['permanent'])
+            self.zones[item['zone_id']].add_item(i)
+
+
+    def _generate_zones(self, world_zones):
+        for count, z in enumerate(world_zones):
+            tmp = Zone(world_zones[z]['title'], world_zones[z]['description'], world_zones[z]['game_over'])
+            self._add_zone(str(z), tmp)
+            if world_zones[z]['start']:
+                self._set_start_zone(z)
 
     def start(self):
         return self.start_zone

@@ -16,7 +16,7 @@ class controller(object):
             try:
                 f = sys.argv[sys.argv.index('-f') + 1]
             except IndexError:
-                print "You didn't include a file"
+                print("You didn't include a file")
                 sys.exit(0)
             self.world = World(f)
         else:
@@ -26,21 +26,21 @@ class controller(object):
  
     def _clear_screen(self):
         os.system('cls' if os.name == 'nt' else 'clear')
-        print
-        print self.world.title.upper().center(len(self.world.title) * 3, ' ')
-        print
+        print()
+        print(self.world.title.upper().center(len(self.world.title) * 3, ' '))
+        print()
 
     # Get player's name and start game
     def setup(self, args):
         self._clear_screen()
         # TODO Uncomment to set player name dynamically
-        #choice = raw_input("What is your name? (Leave blank for default) ")
+        #choice = input("What is your name? (Leave blank for default) ")
         #if len(choice) > 0:
         #    self.player.set_name(choice)
         self._clear_screen()
-        print "Hello, " + self.player.name
-        print "Welcome to " + self.world.title
-        print
+        print("Hello, " + self.player.name)
+        print("Welcome to " + self.world.title)
+        print()
         return ("Instructions", args)
 
     # TODO Set up instructions state to read helpfile based on command line flag
@@ -57,17 +57,17 @@ class controller(object):
     # Request and parse user input
     # TODO Make better input handling logic
     def prompt(self, args):
-        print
-        choice = raw_input("What's next? ")
+        print()
+        choice = input("What's next? ")
         # If nothing was input, try again
         if len(choice) <= 0:
             self._clear_screen()
-            print "Ummm..."
+            print("Ummm...")
             return ("Prompt Input", args)
         # If player chooses to exit
         if choice.lower() in ['exit', 'quit', 'q']:
             self._clear_screen()
-            print "Goodbye, " + self.player.name
+            print("Goodbye, " + self.player.name)
             return ("End Game", args)
         # TODO Display Help
         # TODO Examine Self
@@ -80,12 +80,12 @@ class controller(object):
                 return ("Check Inventory", args)
             elif choice.lower()[6:] in self.player.inventory:
                 self._clear_screen()
-                print self.player.inventory[choice.lower()[6:]].name
-                print self.player.inventory[choice.lower()[6:]].description
-                print
+                print(self.player.inventory[choice.lower()[6:]].name)
+                print(self.player.inventory[choice.lower()[6:]].description)
+                print()
             else:
                 self._clear_screen()
-                print "Sorry, I don't recognize what you're trying to check"
+                print("Sorry, I don't recognize what you're trying to check")
             return ("Prompt Input", args)
         # Check Inventory
         if choice.lower() == 'i' or choice.lower() == 'inventory':
@@ -106,7 +106,7 @@ class controller(object):
                 self.player.inventory[choice.lower()[8:]].describe(inventory=True)
             else:
                 self._clear_screen()
-                print "That item doesn't seem to be here"
+                print("That item doesn't seem to be here")
             return ("Prompt Input", args)
         # Pickup Item
         elif choice.lower() == 'look' or choice.lower() == 'look around':
@@ -120,7 +120,7 @@ class controller(object):
                 return ("Prompt Input", args)
             else:
                 self._clear_screen()
-                print "That item doesn't seem to be here"
+                print("That item doesn't seem to be here")
                 return ("Prompt Input", args)
         # Drop Item
         elif choice .lower()[:4] == 'drop':
@@ -130,7 +130,7 @@ class controller(object):
                 return ("Prompt Input", args)
             else:
                 self._clear_screen()
-                print "You don't have a " + choice[5:]
+                print("You don't have a " + choice[5:])
                 return ("Prompt Input", args)
         # Use Item
         # TODO Maybe use "on" to select a target for item
@@ -145,16 +145,16 @@ class controller(object):
                 return ("Prompt Input", args)
         else:
             self._clear_screen()
-            print "Sorry, I don't recognize that command"
+            print("Sorry, I don't recognize that command")
             return ("Prompt Input", args)
 
     # Player chose to quit
     def end_game(self, args):
-        print "You quit the game in the " + args['current_zone'].name
+        print("You quit the game in the " + args['current_zone'].name)
 
     # Player's body chose for him
     def player_died(self, args):
-        print "Sorry " + str(self.player) + ", you died in the " + str(args['current_zone'])
+        print("Sorry " + str(self.player) + ", you died in the " + str(args['current_zone']))
         
 if __name__ == "__main__":
     # Initialize Controller and FSM States

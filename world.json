@@ -85,5 +85,17 @@
             "amount": 10, 
             "permanent": false
         }
+    ],
+    "characters": [
+        {
+            "zone_id": "grand_entrance",
+            "name": "Goblin",
+            "description": "A small but ferocious goblin",
+            "max_hp": 20,
+            "hp": 20,
+            "inventory": {
+
+            }
+        }
     ]
 }
