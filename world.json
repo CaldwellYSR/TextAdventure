@@ -94,12 +94,12 @@
             "body_part": "head"
         },
         {
-            "zone_id": "hallway",
-            "name": "Helmet 2.0",
-            "description": "It's a better bucket",
-            "type": "armor",
-            "armor_rating": 15,
-            "body_part": "head"
+            "zone_id": "grand_entrance",
+            "name": "Shiv",
+            "description": "Sharpened Spoon",
+            "type": "weapon",
+            "min_damage": 15,
+            "max_damage": 25
         }
     ],
     "characters": [
@@ -109,6 +109,7 @@
             "description": "A small but ferocious goblin",
             "max_hp": 20,
             "hp": 20,
+            "base_attack": 5,
             "inventory": {
 
             }

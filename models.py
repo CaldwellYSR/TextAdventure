@@ -1,4 +1,5 @@
 import json, sys
+import random as R
 from termcolor import colored
 
 # Base item class
@@ -25,23 +26,33 @@ class Potion(Item):
         print("You heal " + str(self.amount) + " health points to " + str(target))
         target.heal(self.amount, self.permanent)
 
-# TODO come up with better property name than 'body_part'
 class Armor(Item):
     def __init__(self, name="Helmet", description="It's a bucket", body_part="head", armor_rating="10"):
         super().__init__(name, description)
         self.body_part = body_part
         self.armor_rating = armor_rating
 
+class Weapon(Item):
+    def __init__(self, name="Shiv", description="Sharpened spoon", min_damage=1, max_damage=3):
+        super().__init__(name, description)
+        self.body_part = "weapon"
+        self.min_damage = min_damage
+        self.max_damage = max_damage
+
+    def get_damage(self):
+        return R.randint(self.min_damage, self.max_damage)
+
 # TODO Special Item Class for Keys and other Special Story Items or Required Items
 
 # Base Character Class with damage and healing logic
 class Character(object):
-    def __init__(self, name="Madeleine", description="Beautiful", hp=100, max_hp=100, inventory={}):
+    def __init__(self, name="Madeleine", description="Beautiful", hp=100, max_hp=100, base_attack=5, inventory={}):
         self.name = name
         self.description = description
         self.inventory = inventory
         self.hp = 100
         self.max_hp = 100
+        self.base_attack = base_attack
         self.alive = True
         self.equipped = {
             "weapon": None,
@@ -69,19 +80,62 @@ class Character(object):
         if self.hp > self.max_hp:
             self.hp = self.max_hp
 
-    # TODO soak damage with armor
-    def damage(self, amount, permanent, zone):
-        self.hp -= amount
+    def attack(self, character, zone):
+        damage = self.base_attack
+        if isinstance(self.equipped["weapon"], Weapon):
+            damage += self.equipped["weapon"].get_damage()
+        print("{attacker} attacks {victim} for {damage} damage".format(attacker=self.name, victim=character.name, damage=damage))
+        character.take_damage(damage, zone)
+        print("{victim} has {health} health left".format(victim=character.name, health=character.hp))
+
+    # TODO Determine if character should fight back, run, or say something
+    def take_damage(self, amount, zone):
+        armor = 0
+        for name, value in self.equipped.items():
+            if isinstance(value, Armor):
+                armor += value.armor_rating
+        if amount > armor:
+            self.hp = self.hp - (amount - armor)
         if self.hp <= 0:
+            self.hp = 0
             self.alive = False
-            
+            print ("{victim} is dead and has dropped all items".format(victim=self.name))
+            for id, item in self.inventory.items():
+                self.drop_item(zone, item)
+            for id, item in self.equipped.items():
+                try:
+                    self.drop_item(zone, item)
+                except AttributeError:
+                    pass
+
+
+    def drop_item(self, zone, item):
+        print("You just dropped a " + item.name)
+        if item in self.inventory:
+            del(self.inventory[item.name.lower()])
+        elif item in self.equipped:
+            del(self.equipped[item.name.lower()])
+
+        zone.add_item(item)
+         
     def describe(self):
-        pass
+        name = colored(self.name, 'green', attrs=['bold']) if self.alive else colored(self.name, 'red', attrs=['bold'])
+        print(name + ": " + self.description)
+        print()
+        hp = colored(str(self.hp), 'green', attrs=['bold']) if self.hp >= self.max_hp * 0.4 else colored(str(self.hp), 'red', attrs=['bold'])
+        print("HP: " + hp + "/" + str(self.max_hp))
+        print()
+        if self.alive:
+            print("Equipped:")
+            print("==================================================")
+            for key, value in self.equipped.items():
+                print(colored(key.capitalize() + ": ", 'cyan', attrs=['bold']) + str(value))
+ 
 
 # Specific type of character that has item inventory helper functions
 class Player(Character):
     def __init__(self):
-        return super().__init__()
+        return super().__init__(base_attack=10)
 
     def set_name(self, name):
         self.name = name
@@ -91,11 +145,7 @@ class Player(Character):
         self.inventory[item.name.lower()] = item
         zone.remove_item(item)
 
-    def drop_item(self, zone, item):
-        print("You just dropped a " + item.name)
-        del(self.inventory[item.name.lower()])
-        zone.add_item(item)
-
+    
     def check_inventory(self, args):
         print()
         print(self.name + "'s Inventory")
@@ -114,8 +164,9 @@ class Player(Character):
             print(colored(key.capitalize() + ": ", 'cyan', attrs=['bold']) + str(value))
         return ("Check Inventory", args)
 
-    def damage(self, amount, permanent, zone):
-        super(Player, self).damage(amount, permanent, zone)
+    # Perform standard take_damage function but then check if you're still alive for state management
+    def take_damage(self, amount, permanent, zone):
+        super(Player, self).take_damage(amount, zone)
         if not self.alive:
             args = { "current_zone": zone }
             return ("Player Died", args)
@@ -175,6 +226,11 @@ class Zone(object):
         for id, item in self.items.items():
             print(item)
         print()
+        print("Characters:")
+        print("=====================")
+        for id, char in self.characters.items():
+            print(char)
+
 
 
 # World class parses json file to generate the world full of
@@ -206,7 +262,7 @@ class World(object):
 
     def _generate_characters(self, characters):
         for c in characters:
-            char = Character(c['name'], c['description'], c['hp'], c['max_hp'], c['inventory'])
+            char = Character(c['name'], c['description'], c['hp'], c['max_hp'], c['base_attack'], c['inventory'])
             self.zones[c['zone_id']].add_character(char)
 
     def _generate_connectors(self, connectors):
@@ -221,9 +277,8 @@ class World(object):
             elif item['type'] == 'armor':
                 i = Armor(item['name'], item['description'], item['body_part'], item['armor_rating'])
             elif item['type'] == 'weapon':
-                i = Weapon()
+                i = Weapon(item['name'], item['description'], item['min_damage'], item['max_damage'])
             self.zones[item['zone_id']].add_item(i)
-
 
     def _generate_zones(self, world_zones):
         for count, z in enumerate(world_zones):

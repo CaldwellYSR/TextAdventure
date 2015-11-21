@@ -1,6 +1,6 @@
 #!./env/bin/python 
 
-from models import Player, Item, Zone, Connector, World
+from models import *
 from fsm import StateMachine
 import sys, os
 import textwrap
@@ -56,6 +56,7 @@ class controller(object):
 
     # Request and parse user input
     # TODO Make better input handling logic
+    # TODO create variables for needed substring and lists of keywords of each length to test against
     def prompt(self, args):
         print()
         choice = input("What's next? ")
@@ -69,7 +70,7 @@ class controller(object):
             print("Goodbye, " + self.player.name)
             return ("End Game", args)
         # TODO Display Help
-        # TODO Examine Self
+        # TODO Examine Self or item in inventory
         if choice.lower()[:5] == 'check':
             if choice.lower()[6:] in ['self', 'myself', 'me']:
                 return ("Examine Self", args)
@@ -81,6 +82,13 @@ class controller(object):
                 print()
             else:
                 print("Sorry, I don't recognize what you're trying to check")
+            return ("Prompt Input", args)
+        # Attack Character in Zone
+        if choice.lower()[:6] == 'attack':
+            if choice.lower()[7:] in args['current_zone'].characters:
+                self.player.attack(args['current_zone'].characters[choice.lower()[7:]], args['current_zone'])
+            else:
+                print("Sorry, that character isn't in this area")
             return ("Prompt Input", args)
         # Check Inventory
         if choice.lower() == 'i' or choice.lower() == 'inventory':
@@ -98,14 +106,16 @@ class controller(object):
         if choice.lower() in args['current_zone'].exits:
             args['current_zone'] = args['current_zone'].exits[choice.lower()].destination
             return ("Describe Surrounding", args)
-        # Examine Item in Zone
+        # Examine Item or Character in Current Zone
         if choice.lower()[:7] in ['examine', 'look at']:
             if choice.lower()[8:] in args['current_zone'].items:
                 args['current_zone'].items[choice.lower()[8:]].describe(inventory=False)
             elif choice.lower()[8:] in self.player.inventory:
                 self.player.inventory[choice.lower()[8:]].describe(inventory=True)
+            elif choice.lower()[8:] in args['current_zone'].characters:
+                args['current_zone'].characters[choice.lower()[8:]].describe()
             else:
-                print("That item doesn't seem to be here")
+                print("There doesn't seem to be any of those in this area")
             return ("Prompt Input", args)
         # Look around
         if choice.lower() == 'look' or choice.lower() == 'look around':
@@ -130,9 +140,9 @@ class controller(object):
         # Use Item
         # TODO Maybe use "on" to select a target for item
         if choice .lower()[:3] == 'use':
-            if choice.lower()[4:] in self.player.inventory:
+            if choice.lower()[4:] in self.player.inventory and isinstance(self.player.inventory[choice.lower()[4:]], Potion):
                 self.player.inventory[choice.lower()[4:]].use(self.player)
-                return ("Prompt Input", args)
+            return ("Prompt Input", args)
         print("Sorry, I don't recognize that command")
         return ("Prompt Input", args)
 
@@ -153,6 +163,7 @@ if __name__ == "__main__":
     c.fsm.add_state("Prompt Input", c.prompt)
     c.fsm.add_state("Examine Self", c.player.describe)
     c.fsm.add_state("Check Inventory", c.player.check_inventory)
+    # TODO Add state for fighting 
     c.fsm.add_state("End Game", c.end_game, end_state=True)
     c.fsm.add_state("Player Died", c.player_died, end_state=True)
     # Set initial state and run game with necessary arguments
