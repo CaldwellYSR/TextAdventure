@@ -164,6 +164,7 @@ if __name__ == "__main__":
     c.fsm.add_state("Examine Self", c.player.describe)
     c.fsm.add_state("Check Inventory", c.player.check_inventory)
     # TODO Add state for fighting 
+    c.fsm.add_state("Fight", f.player.fight)
     c.fsm.add_state("End Game", c.end_game, end_state=True)
     c.fsm.add_state("Player Died", c.player_died, end_state=True)
     # Set initial state and run game with necessary arguments

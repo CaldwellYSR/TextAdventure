@@ -110,7 +110,8 @@ class Character(object):
 
 
     def drop_item(self, zone, item):
-        print("You just dropped a " + item.name)
+        art = "an" if item.name[0] in ['a','e','i','o','u'] else "a"
+        print("You just dropped {art} {item}".format(art=art, item=item.name))
         if item in self.inventory:
             del(self.inventory[item.name.lower()])
         elif item in self.equipped:
@@ -120,16 +121,16 @@ class Character(object):
          
     def describe(self):
         name = colored(self.name, 'green', attrs=['bold']) if self.alive else colored(self.name, 'red', attrs=['bold'])
-        print(name + ": " + self.description)
+        print("{name}: {description}".format(name=name, description=self.description))
         print()
         hp = colored(str(self.hp), 'green', attrs=['bold']) if self.hp >= self.max_hp * 0.4 else colored(str(self.hp), 'red', attrs=['bold'])
-        print("HP: " + hp + "/" + str(self.max_hp))
+        print("HP: {hp}/{max}".format(hp=hp, max=str(self.max_hp)))
         print()
         if self.alive:
             print("Equipped:")
             print("==================================================")
             for key, value in self.equipped.items():
-                print(colored(key.capitalize() + ": ", 'cyan', attrs=['bold']) + str(value))
+                print(colored("{key}: ".format(key=key.capitalize()), 'cyan', attrs=['bold']) + str(value))
  
 
 # Specific type of character that has item inventory helper functions
@@ -141,14 +142,15 @@ class Player(Character):
         self.name = name
 
     def pickup_item(self, zone, item=Item()):
-        print("You just picked up a " + item.name)
+        art = "an" if item.name[0] in ['a','e','i','o','u'] else "a"
+        print("You just picked up {art} {name}".format(art=art, name=item.name))
         self.inventory[item.name.lower()] = item
         zone.remove_item(item)
 
     
     def check_inventory(self, args):
         print()
-        print(self.name + "'s Inventory")
+        print("{player}'s Inventory".format(player=self.name))
         print("==================================================")
         for id, item in self.inventory.items():
             print(item)
@@ -156,7 +158,7 @@ class Player(Character):
     
     def describe(self, args):
         hp = colored(str(self.hp), 'green', attrs=['bold']) if self.hp >= self.max_hp * 0.4 else colored(str(self.hp), 'red', attrs=['bold'])
-        print("HP: " + hp + "/" + str(self.max_hp))
+        print("HP: {hp}/{max}".format(hp=hp, max=str(self.max_hp)))
         print()
         print("Equipped:")
         print("==================================================")
