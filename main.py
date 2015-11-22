@@ -26,8 +26,13 @@ class controller(object):
  
     def _clear_screen(self):
         os.system('cls' if os.name == 'nt' else 'clear')
-        print()
-        print(self.world.title.upper().center(len(self.world.title) * 3, ' '))
+        sz = os.get_terminal_size()
+        hr = ""
+        for i in range(0, sz[0]):
+            hr += '='
+        print(colored(hr, 'cyan', attrs=['bold']))
+        print(self.world.title.upper().center(sz[0]))
+        print(colored(hr, 'cyan', attrs=['bold']))
         print()
 
     # Get player's name and start game
@@ -38,8 +43,8 @@ class controller(object):
         #if len(choice) > 0:
         #    self.player.set_name(choice)
         self._clear_screen()
-        print("Hello, " + self.player.name)
-        print("Welcome to " + self.world.title)
+        print("Hello, {name}".format(name=self.player.name))
+        print("Welcome to {world}".format(world=self.world.title))
         print()
         return ("Instructions", args)
 
@@ -67,7 +72,7 @@ class controller(object):
             return ("Prompt Input", args)
         # If player chooses to exit
         if choice.lower() in ['exit', 'quit', 'q']:
-            print("Goodbye, " + self.player.name)
+            print("Goodbye, {name}".format(name=self.player.name))
             return ("End Game", args)
         # TODO Display Help
         # TODO Examine Self or item in inventory
@@ -100,7 +105,7 @@ class controller(object):
             except TypeError as e:
                 print(e.strerror)
                 return ("Prompt Input", args)
-            print("You equipped the " + choice[6:])
+            print("You equipped the {item}".print(item=choice[6:]))
             return ("Prompt Input", args)
         # Input matches exit direction
         if choice.lower() in args['current_zone'].exits:
@@ -135,7 +140,8 @@ class controller(object):
                 self.player.drop_item(args['current_zone'], self.player.inventory[choice.lower()[5:]])
                 return ("Prompt Input", args)
             else:
-                print("You don't have a " + choice[5:])
+                art = "an" if choice[0] in ['a','e','i','o','u'] else "a"
+                print("You don't have {art} {item}".format(art=art, item=choice[5:]))
                 return ("Prompt Input", args)
         # Use Item
         # TODO Maybe use "on" to select a target for item
@@ -148,11 +154,11 @@ class controller(object):
 
     # Player chose to quit
     def end_game(self, args):
-        print("You quit the game in the " + args['current_zone'].name)
+        print("You quit the game in the {zone}".format(zone=args['current_zone'].name))
 
     # Player's body chose for him
     def player_died(self, args):
-        print("Sorry " + str(self.player) + ", you died in the " + str(args['current_zone']))
+        print("Sorry {player}, you died in the {zone}".format(player=str(self.player), zone=str(args['current_zone'])))
         
 if __name__ == "__main__":
     # Initialize Controller and FSM States
@@ -164,7 +170,7 @@ if __name__ == "__main__":
     c.fsm.add_state("Examine Self", c.player.describe)
     c.fsm.add_state("Check Inventory", c.player.check_inventory)
     # TODO Add state for fighting 
-    c.fsm.add_state("Fight", f.player.fight)
+    #c.fsm.add_state("Fight", c.player.fight)
     c.fsm.add_state("End Game", c.end_game, end_state=True)
     c.fsm.add_state("Player Died", c.player_died, end_state=True)
     # Set initial state and run game with necessary arguments
