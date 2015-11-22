@@ -105,7 +105,7 @@ class controller(object):
             except TypeError as e:
                 print(e.strerror)
                 return ("Prompt Input", args)
-            print("You equipped the {item}".print(item=choice[6:]))
+            print("You equipped the {item}".format(item=choice[6:]))
             return ("Prompt Input", args)
         # Input matches exit direction
         if choice.lower() in args['current_zone'].exits:
