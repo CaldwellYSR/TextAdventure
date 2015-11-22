@@ -244,6 +244,7 @@ class World(object):
         json_data = open(f, 'r').read()
         data = json.loads(json_data)
         self.title = data['title']
+        self.prompt = data['prompt']
         # Generate Zones
         self._generate_zones(data['zones'])
         # Generate Connectors

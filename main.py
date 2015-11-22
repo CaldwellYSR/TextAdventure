@@ -64,7 +64,7 @@ class controller(object):
     # TODO create variables for needed substring and lists of keywords of each length to test against
     def prompt(self, args):
         print()
-        choice = input("What's next? ")
+        choice = input("{prompt}: ".format(prompt=self.world.prompt))
         self._clear_screen()
         # If nothing was input, try again
         if len(choice) <= 0:

@@ -1,5 +1,6 @@
 {
     "title": "Krypton",
+    "prompt": "What's next",
     "zones": {
         "grand_entrance": { 
             "title": "Grand Entrance", 
