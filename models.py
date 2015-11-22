@@ -89,7 +89,7 @@ class Character(object):
         print("{victim} has {health} health left".format(victim=character.name, health=character.hp))
 
     # TODO Determine if character should fight back, run, or say something
-    def take_damage(self, amount, zone):
+    def take_damage(self, character, amount, zone):
         armor = 0
         for name, value in self.equipped.items():
             if isinstance(value, Armor):
