@@ -43,6 +43,10 @@ class Weapon(Item):
         return R.randint(self.min_damage, self.max_damage)
 
 # TODO Special Item Class for Keys and other Special Story Items or Required Items
+class Key(Item):
+    def __init__(self, name="Key", description="Key with key things", key_id=""):
+        super().__init__(name, description)
+        self.key_id = key_id
 
 # Base Character Class with damage and healing logic
 class Character(object):
@@ -110,8 +114,6 @@ class Character(object):
 
 
     def drop_item(self, zone, item):
-        art = "an" if item.name[0] in ['a','e','i','o','u'] else "a"
-        print("You just dropped {art} {item}".format(art=art, item=item.name))
         if item in self.inventory:
             del(self.inventory[item.name.lower()])
         elif item in self.equipped:
@@ -136,6 +138,7 @@ class Character(object):
 # Specific type of character that has item inventory helper functions
 class Player(Character):
     def __init__(self):
+        self.keys = {}
         return super().__init__(base_attack=10)
 
     def set_name(self, name):
@@ -146,7 +149,18 @@ class Player(Character):
         print("You just picked up {art} {name}".format(art=art, name=item.name))
         self.inventory[item.name.lower()] = item
         zone.remove_item(item)
+        if isinstance(item, Key):
+            self.keys[item.key_id] = item
 
+    def drop_item(self, zone, item):
+        art = "an" if item.name[0] in ['a','e','i','o','u'] else "a"
+        print("You just dropped {art} {item}".format(art=art, item=item.name))
+        if item in self.inventory:
+            del(self.inventory[item.name.lower()])
+        elif item in self.equipped:
+            del(self.equipped[item.name.lower()])
+
+        zone.add_item(item)
     
     def check_inventory(self, args):
         print()
@@ -175,8 +189,18 @@ class Player(Character):
     
 # Connects two world zones together
 class Connector(object):
-    def __init__(self, destination):
+    def __init__(self, destination, locked=False, key_id=""):
         self.destination = destination
+        self.locked = locked
+        if self.locked:
+            self.key_id = key_id
+
+    def unlock(self, key_id):
+        if key_id == self.key_id:
+            self.locked = False
+            return True
+        else:
+            raise ValueError("That key isn't right")
 
 # Zone class describes an area in the world, if game_over=True this room will cause an end state
 class Zone(object):
@@ -270,7 +294,10 @@ class World(object):
 
     def _generate_connectors(self, connectors):
         for c in connectors:
-            conn = Connector(self.zones[c['to_id']])
+            if 'key_id' in c:
+                conn = Connector(self.zones[c['to_id']], True, c['key_id'])
+            else:
+                conn = Connector(self.zones[c['to_id']])
             self.zones[c['from_id']].add_connector(conn, c['direction'])
 
     def _generate_items(self, items):
@@ -281,6 +308,8 @@ class World(object):
                 i = Armor(item['name'], item['description'], item['body_part'], item['armor_rating'])
             elif item['type'] == 'weapon':
                 i = Weapon(item['name'], item['description'], item['min_damage'], item['max_damage'])
+            elif item['type'] == 'key':
+                i = Key(item['name'], item['description'], item['key_id'])
             self.zones[item['zone_id']].add_item(i)
 
     def _generate_zones(self, world_zones):

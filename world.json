@@ -44,7 +44,8 @@
         { 
             "to_id": "hallway", 
             "from_id": "grand_entrance", 
-            "direction": "north" 
+            "direction": "north",
+            "key_id": "grand_entrance_key"
         }, 
         { 
             "to_id": "hallway", 
@@ -101,6 +102,13 @@
             "type": "weapon",
             "min_damage": 15,
             "max_damage": 25
+        },
+        {
+            "zone_id": "grand_entrance",
+            "name": "Hallway Key",
+            "description": "Key to the hallway door",
+            "type": "key",
+            "key_id": "grand_entrance_key"
         }
     ],
     "characters": [

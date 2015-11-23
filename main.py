@@ -61,7 +61,9 @@ class controller(object):
 
     # Request and parse user input
     # TODO Make better input handling logic
-    # TODO create variables for needed substring and lists of keywords of each length to test against
+    # TODO create keywords dict and test if input
+    # is in the keys of the dict, if it is then run the function set in the value of that dict.
+    # @see http://stackoverflow.com/questions/9205081/python-is-there-a-way-to-store-a-function-in-a-list-or-dictionary-so-that-when
     def prompt(self, args):
         print()
         choice = input("{prompt}: ".format(prompt=self.world.prompt))
@@ -75,6 +77,29 @@ class controller(object):
             print("Goodbye, {name}".format(name=self.player.name))
             return ("End Game", args)
         # TODO Display Help
+        # Input matches exit direction
+        if choice.lower() in args['current_zone'].exits:
+            if args['current_zone'].exits[choice.lower()].locked:
+                print("This door is locked, you can try to unlock it by typing 'unlock {dir}".format(dir=choice.lower()))
+                return("Prompt Input", args)
+            else:
+                args['current_zone'] = args['current_zone'].exits[choice.lower()].destination
+            return ("Describe Surrounding", args)
+        if choice.lower()[:6] == 'unlock':
+            unlocked = False
+            if choice.lower()[7:] in args['current_zone'].exits: 
+                for key, value in self.player.keys.items():
+                    try:
+                        unlocked = args['current_zone'].exits[choice.lower()[7:]].unlock(key)
+                    except ValueError:
+                        pass
+            if unlocked:
+                args['current_zone'] = args['current_zone'].exits[choice.lower()[7:]].destination
+                print("You unlocked the door")
+                return ("Describe Surrounding", args)
+            else:
+                print("It appears you don't have the key")
+                return ("Prompt Input")
         # TODO Examine Self or item in inventory
         if choice.lower()[:5] == 'check':
             if choice.lower()[6:] in ['self', 'myself', 'me']:
@@ -107,10 +132,6 @@ class controller(object):
                 return ("Prompt Input", args)
             print("You equipped the {item}".format(item=choice[6:]))
             return ("Prompt Input", args)
-        # Input matches exit direction
-        if choice.lower() in args['current_zone'].exits:
-            args['current_zone'] = args['current_zone'].exits[choice.lower()].destination
-            return ("Describe Surrounding", args)
         # Examine Item or Character in Current Zone
         if choice.lower()[:7] in ['examine', 'look at']:
             if choice.lower()[8:] in args['current_zone'].items:
