@@ -49,10 +49,6 @@ class controller(object):
         print()
         return ("Instructions", args)
 
-    # TODO Set up instructions state to read helpfile based on command line flag
-    def show_instructions(self, args):
-        return ("Describe Surrounding", args)
-        
     # Describe current world zone
     def describe_surrounding(self, args):
         args = args['current_zone'].describe(args)
@@ -186,7 +182,7 @@ if __name__ == "__main__":
     # Initialize Controller and FSM States
     c = controller()
     c.fsm.add_state("Get Player Info", c.setup)
-    c.fsm.add_state("Instructions", c.show_instructions)
+    c.fsm.add_state("Instructions", c.world.print_instructions)
     c.fsm.add_state("Describe Surrounding", c.describe_surrounding)
     c.fsm.add_state("Prompt Input", c.prompt)
     c.fsm.add_state("Examine Self", c.player.describe)

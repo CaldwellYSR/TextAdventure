@@ -269,6 +269,7 @@ class World(object):
         data = json.loads(json_data)
         self.title = data['title']
         self.prompt = data['prompt']
+        self.instructions = data['instructions']
         # Generate Zones
         self._generate_zones(data['zones'])
         # Generate Connectors
@@ -318,6 +319,11 @@ class World(object):
             self._add_zone(str(z), tmp)
             if world_zones[z]['start']:
                 self._set_start_zone(z)
+
+    def print_instructions(self, args):
+        for i in self.instructions:
+            print(i)
+        return ("Describe Surrounding", args)
 
     def start(self):
         return self.start_zone

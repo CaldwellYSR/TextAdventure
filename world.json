@@ -1,6 +1,7 @@
 {
     "title": "Krypton",
     "prompt": "What's next",
+    "instructions": ["Good luck, Have fun"],
     "zones": {
         "grand_entrance": { 
             "title": "Grand Entrance", 
