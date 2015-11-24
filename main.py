@@ -5,6 +5,7 @@ from fsm import StateMachine
 import sys, os
 import textwrap
 
+# TODO Add a GUI
 class controller(object):
     def __init__(self, world=""):
         # Initialize FSM and Player Character
