@@ -42,7 +42,6 @@ class Weapon(Item):
     def get_damage(self):
         return R.randint(self.min_damage, self.max_damage)
 
-# TODO Special Item Class for Keys and other Special Story Items or Required Items
 class Key(Item):
     def __init__(self, name="Key", description="Key with key things", key_id=""):
         super().__init__(name, description)
@@ -88,8 +87,7 @@ class Character(object):
         damage = self.base_attack
         if isinstance(self.equipped["weapon"], Weapon):
             damage += self.equipped["weapon"].get_damage()
-        print("{attacker} attacks {victim} for {damage} damage".format(attacker=self.name, victim=character.name, damage=damage))
-        character.take_damage(damage, zone)
+        character.take_damage(self, damage, zone)
         print("{victim} has {health} health left".format(victim=character.name, health=character.hp))
 
     # TODO Determine if character should fight back, run, or say something
@@ -98,8 +96,12 @@ class Character(object):
         for name, value in self.equipped.items():
             if isinstance(value, Armor):
                 armor += value.armor_rating
+        print("{attacker} attacks {victim} for {damage} damage".format(attacker=character.name, victim=self.name, damage=amount))
         if amount > armor:
             self.hp = self.hp - (amount - armor)
+        else:
+            print("The damage was soaked by armor")
+        print()
         if self.hp <= 0:
             self.hp = 0
             self.alive = False
@@ -134,6 +136,22 @@ class Character(object):
             for key, value in self.equipped.items():
                 print(colored("{key}: ".format(key=key.capitalize()), 'cyan', attrs=['bold']) + str(value))
  
+
+# Passive Character will try to run away quickly upon being attacked
+
+# Aggressive Character will fight to the death
+class Aggro_Character(Character):
+    def take_damage(self, character, amount, zone):
+        super().take_damage(character, amount, zone)
+        if self.alive:
+            self.attack(character, zone)
+
+# Moderate Character will fight back but will try to run if too threatened.
+
+# Riddler, doesn't want to fight. Just wants you to answer his/her question
+# Will not fight back at all, but has a few things they oculd say if attacked
+
+# Narrator: Cannot be attacked or moved. Simply exists to have a conversation
 
 # Specific type of character that has item inventory helper functions
 class Player(Character):
@@ -181,11 +199,12 @@ class Player(Character):
         return ("Check Inventory", args)
 
     # Perform standard take_damage function but then check if you're still alive for state management
-    def take_damage(self, amount, permanent, zone):
-        super(Player, self).take_damage(amount, zone)
+    def take_damage(self, character, amount, zone):
+        super(Player, self).take_damage(character, amount, zone)
         if not self.alive:
             args = { "current_zone": zone }
             return ("Player Died", args)
+        return
     
 # Connects two world zones together
 class Connector(object):
@@ -240,7 +259,7 @@ class Zone(object):
             print()
         return args
     
-    # Describe exits, items, and TODO (other characters) in this room
+    # Describe exits, items, and other characters in the room
     def look(self):
         print("Exits:")
         print("=====================")
@@ -290,7 +309,7 @@ class World(object):
 
     def _generate_characters(self, characters):
         for c in characters:
-            char = Character(c['name'], c['description'], c['hp'], c['max_hp'], c['base_attack'], c['inventory'])
+            char = Aggro_Character(c['name'], c['description'], c['hp'], c['max_hp'], c['base_attack'], c['inventory'])
             self.zones[c['zone_id']].add_character(char)
 
     def _generate_connectors(self, connectors):
