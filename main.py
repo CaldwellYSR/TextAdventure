@@ -75,13 +75,17 @@ class controller(object):
             return ("End Game", args)
         # TODO Display Help
         # Go Direction
-        if choice.lower()[:2] == 'go' and choice.lower()[3:] in args['current_zone'].exits:
-            if args['current_zone'].exits[choice.lower()[3:]].locked:
-                print("This door is locked, you can try to unlock it by typing 'unlock {dir}'".format(dir=choice.lower()[3:]))
-                return("Prompt Input", args)
+        if choice.lower()[:2] == 'go':
+            if choice.lower()[3:] in args['current_zone'].exits:
+                if args['current_zone'].exits[choice.lower()[3:]].locked:
+                    print("This door is locked, you can try to unlock it by typing 'unlock {dir}'".format(dir=choice.lower()[3:]))
+                    return("Prompt Input", args)
+                else:
+                    args['current_zone'] = args['current_zone'].exits[choice.lower()].destination
+                return ("Describe Surrounding", args)
             else:
-                args['current_zone'] = args['current_zone'].exits[choice.lower()].destination
-            return ("Describe Surrounding", args)
+                print("That is not a valid direction for you to go.")
+                return ("Describe Surrounding", args)
         # Input matches exit direction
         if choice.lower() in args['current_zone'].exits:
             if args['current_zone'].exits[choice.lower()].locked:
