@@ -22,6 +22,7 @@ class Potion(Item):
         self.amount = amount
         self.permanent = permanent
         
+    # TODO remove item from inv on use
     def use(self, target, current_room=None):
         print("You heal " + str(self.amount) + " health points to " + str(target))
         target.heal(self.amount, self.permanent)
