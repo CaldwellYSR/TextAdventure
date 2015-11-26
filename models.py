@@ -22,10 +22,10 @@ class Potion(Item):
         self.amount = amount
         self.permanent = permanent
         
-    # TODO remove item from inv on use
     def use(self, target, current_room=None):
         print("You heal " + str(self.amount) + " health points to " + str(target))
         target.heal(self.amount, self.permanent)
+        del(target.inventory[self.name.lower()])
 
 class Armor(Item):
     def __init__(self, name="Helmet", description="It's a bucket", body_part="head", armor_rating="10"):

@@ -74,10 +74,18 @@ class controller(object):
             print("Goodbye, {name}".format(name=self.player.name))
             return ("End Game", args)
         # TODO Display Help
+        # Go Direction
+        if choice.lower()[:2] == 'go' and choice.lower()[3:] in args['current_zone'].exits:
+            if args['current_zone'].exits[choice.lower()[3:]].locked:
+                print("This door is locked, you can try to unlock it by typing 'unlock {dir}'".format(dir=choice.lower()[3:]))
+                return("Prompt Input", args)
+            else:
+                args['current_zone'] = args['current_zone'].exits[choice.lower()].destination
+            return ("Describe Surrounding", args)
         # Input matches exit direction
         if choice.lower() in args['current_zone'].exits:
             if args['current_zone'].exits[choice.lower()].locked:
-                print("This door is locked, you can try to unlock it by typing 'unlock {dir}".format(dir=choice.lower()))
+                print("This door is locked, you can try to unlock it by typing 'unlock {dir}'".format(dir=choice.lower()))
                 return("Prompt Input", args)
             else:
                 args['current_zone'] = args['current_zone'].exits[choice.lower()].destination
@@ -96,7 +104,7 @@ class controller(object):
                 return ("Describe Surrounding", args)
             else:
                 print("It appears you don't have the key")
-                return ("Prompt Input")
+                return ("Prompt Input", args)
         # TODO Examine Self or item in inventory
         if choice.lower()[:5] == 'check':
             if choice.lower()[6:] in ['self', 'myself', 'me']:
