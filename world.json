@@ -120,6 +120,7 @@
             "max_hp": 20,
             "hp": 20,
             "base_attack": 5,
+            "message": "Ok, you can have my items just please let me live",
             "inventory": {
 
             }

@@ -107,13 +107,17 @@ class Character(object):
             self.hp = 0
             self.alive = False
             print ("{victim} is dead and has dropped all items".format(victim=self.name))
-            for id, item in self.inventory.items():
+            self.drop_all_items(zone)
+            
+    def drop_all_items(self, zone):
+        for id, item in self.inventory.items():
+            print("{name} dropped {item}".format(name=self.name, item=item));
+            self.drop_item(zone, item)
+        for id, item in self.equipped.items():
+            try:
                 self.drop_item(zone, item)
-            for id, item in self.equipped.items():
-                try:
-                    self.drop_item(zone, item)
-                except AttributeError:
-                    pass
+            except AttributeError:
+                pass
 
 
     def drop_item(self, zone, item):
@@ -148,6 +152,24 @@ class Aggro_Character(Character):
             self.attack(character, zone)
 
 # Moderate Character will fight back but will try to run if too threatened.
+class Warrior_Character(Character):
+    def __init__(self, name="Madeleine", description="Beautiful", hp=100, max_hp=100, base_attack=5, inventory={}, message=""):
+        super().__init__(name, description, hp, max_hp, base_attack, inventory)
+        self.disengage_message = message
+
+    def take_damage(self, character, amount, zone):
+        super().take_damage(character, amount, zone);
+        if self.alive:
+            if self.hp > (self.max_hp / 2):
+                self.attack(character, zone)
+            else:
+                self.disengage(zone)
+
+    def disengage(self, zone):
+        print(self.disengage_message)
+        self.drop_all_items(zone)
+
+
 
 # Riddler, doesn't want to fight. Just wants you to answer his/her question
 # Will not fight back at all, but has a few things they oculd say if attacked
@@ -310,7 +332,7 @@ class World(object):
 
     def _generate_characters(self, characters):
         for c in characters:
-            char = Aggro_Character(c['name'], c['description'], c['hp'], c['max_hp'], c['base_attack'], c['inventory'])
+            char = Warrior_Character(c['name'], c['description'], c['hp'], c['max_hp'], c['base_attack'], c['inventory'], c['message'])
             self.zones[c['zone_id']].add_character(char)
 
     def _generate_connectors(self, connectors):
