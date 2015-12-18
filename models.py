@@ -309,6 +309,7 @@ class World(object):
         # Read JSON File
         json_data = open(f, 'r').read()
         data = json.loads(json_data)
+        self.helpfile = data['help']
         self.title = data['title']
         self.prompt = data['prompt']
         self.instructions = data['instructions']

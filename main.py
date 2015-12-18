@@ -75,11 +75,17 @@ class controller(object):
             return ("End Game", args)
         # TODO Display Help
         # Go Direction
+        if choice.lower() == 'help':
+            print("Input:           Action")
+            print("===========================================")
+            for key, value in self.world.helpfile.items():
+                print(colored(key, 'cyan', attrs=['bold']) + ": " + value)
+            return ("Prompt Input", args);
         if choice.lower()[:2] == 'go':
             if choice.lower()[3:] in args['current_zone'].exits:
                 if args['current_zone'].exits[choice.lower()[3:]].locked:
                     print("This door is locked, you can try to unlock it by typing 'unlock {dir}'".format(dir=choice.lower()[3:]))
-                    return("Prompt Input", args)
+                    return ("Prompt Input", args)
                 else:
                     args['current_zone'] = args['current_zone'].exits[choice.lower()].destination
                 return ("Describe Surrounding", args)
@@ -90,7 +96,7 @@ class controller(object):
         if choice.lower() in args['current_zone'].exits:
             if args['current_zone'].exits[choice.lower()].locked:
                 print("This door is locked, you can try to unlock it by typing 'unlock {dir}'".format(dir=choice.lower()))
-                return("Prompt Input", args)
+                return ("Prompt Input", args)
             else:
                 args['current_zone'] = args['current_zone'].exits[choice.lower()].destination
             return ("Describe Surrounding", args)
