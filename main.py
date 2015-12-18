@@ -87,7 +87,7 @@ class controller(object):
                     print("This door is locked, you can try to unlock it by typing 'unlock {dir}'".format(dir=choice.lower()[3:]))
                     return ("Prompt Input", args)
                 else:
-                    args['current_zone'] = args['current_zone'].exits[choice.lower()].destination
+                    args['current_zone'] = args['current_zone'].exits[choice.lower()[3:]].destination
                 return ("Describe Surrounding", args)
             else:
                 print("That is not a valid direction for you to go.")
