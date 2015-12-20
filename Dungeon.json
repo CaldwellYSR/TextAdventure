@@ -1,0 +1,27 @@
+{
+  "title": "Tomb of Dionysus",
+  "prompt": "> ",
+  "instructions": ["Type [help] for a list of commands"],
+  "help": {
+        "quit": "Quit the game and lose all progress",
+        "look or look around": "describe current world zone",
+        "go [direction]": "Try to go through an exit in the specified direction",
+        "unlock [direction]": "Try to unlock a door in the direction specified. You must have the key to that door in your inventory.",
+        "check [bag, me]": "Check your inventory or check yourself (see hp, status effects, and inventory)",
+        "i": "Check inventory",
+        "attack [enemy]": "Attack the specified enemy",
+        "look at [item or character]": "Describes character or item in the current world zone",
+        "take [item]": "Take specified item in current zone",
+        "equip [item]": "Equip specified item",
+        "drop [item]": "Drops the specified item",
+        "use [item]": "Uses the specified item. Will not work on weapons"
+  },
+  "zones": {
+    "temple_entrance": {
+      "title": "Stage Stairs",
+      "description": "You stand on the stage of the Theatre of Dionysus looking down the stars that lead ever farther down towards the river styx.",
+      "start": true,
+      "game_over": false
+    }
+  }
+}
