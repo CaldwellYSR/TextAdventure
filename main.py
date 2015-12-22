@@ -54,6 +54,7 @@ class controller(object):
         args = args['current_zone'].describe(args)
         if args['player_dead']:
             return ("Player Died", args)
+        args['current_zone'].look()
         return ("Prompt Input", args)
 
     # Request and parse user input

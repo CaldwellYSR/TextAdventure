@@ -1,8 +1,8 @@
 {
-  "title": "Tomb of Dionysus",
-  "prompt": "> ",
-  "instructions": ["Type [help] for a list of commands"],
-  "help": {
+    "title": "Tomb of Dionysus",
+    "prompt": "> ",
+    "instructions": ["Type [help] for a list of commands"],
+    "help": {
         "quit": "Quit the game and lose all progress",
         "look or look around": "describe current world zone",
         "go [direction]": "Try to go through an exit in the specified direction",
@@ -15,13 +15,948 @@
         "equip [item]": "Equip specified item",
         "drop [item]": "Drops the specified item",
         "use [item]": "Uses the specified item. Will not work on weapons"
-  },
-  "zones": {
-    "temple_entrance": {
-      "title": "Stage Stairs",
-      "description": "You stand on the stage of the Theatre of Dionysus looking down the stars that lead ever farther down towards the river styx.",
-      "start": true,
-      "game_over": false
-    }
-  }
+    },
+    "zones": {
+        "0": {
+            "title": "0",
+            "description": "",
+            "start": true,
+            "game_over": false
+        },
+        "1": {
+            "title": "1",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "2": {
+            "title": "2",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "3": {
+            "title": "3",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "4": {
+            "title": "4",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "5": {
+            "title": "5",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "6": {
+            "title": "6",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "7": {
+            "title": "7",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "8": {
+            "title": "8",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "9": {
+            "title": "9",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "10": {
+            "title": "10",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "11": {
+            "title": "11",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "12": {
+            "title": "12",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "13": {
+            "title": "13",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "14": {
+            "title": "14",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "15": {
+            "title": "15",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "16": {
+            "title": "16",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "17": {
+            "title": "17",
+            "description": "",
+            "start": false,
+            "game_over": true 
+        },
+        "18": {
+            "title": "18",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "19": {
+            "title": "19",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "20": {
+            "title": "20",
+            "description": "",
+            "start": false,
+            "game_over": true
+        },
+        "21": {
+            "title": "21",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "22": {
+            "title": "22",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "23": {
+            "title": "23",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "24": {
+            "title": "24",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "25": {
+            "title": "25",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "26": {
+            "title": "26",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "27": {
+            "title": "27",
+            "description": "",
+            "start": false,
+            "game_over": true
+        },
+        "28": {
+            "title": "28",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "29": {
+            "title": "29",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "30": {
+            "title": "30",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "31": {
+            "title": "31",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "32": {
+            "title": "32",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "33": {
+            "title": "33",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "34": {
+            "title": "34",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "35": {
+            "title": "35",
+            "description": "",
+            "start": false,
+            "game_over": true
+        },
+        "36": {
+            "title": "36",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "37": {
+            "title": "37",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "38": {
+            "title": "38",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "39": {
+            "title": "39",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "40": {
+            "title": "40",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "41": {
+            "title": "41",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "42": {
+            "title": "42",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "43": {
+            "title": "43",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "44": {
+            "title": "44",
+            "description": "",
+            "start": false,
+            "game_over": true
+        },
+        "45": {
+            "title": "45",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "46": {
+            "title": "46",
+            "description": "",
+            "start": false,
+            "game_over": true
+        },
+        "47": {
+            "title": "47",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "48": {
+            "title": "48",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "49": {
+            "title": "49",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "50": {
+            "title": "50",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "51": {
+            "title": "51",
+            "description": "",
+            "start": false,
+            "game_over": true
+        },
+        "52": {
+            "title": "52",
+            "description": "",
+            "start": false,
+            "game_over": false
+        },
+        "53": {
+            "title": "53",
+            "description": "",
+            "start": false,
+            "game_over": true
+        },
+        "54": {
+            "title": "54",
+            "description": "",
+            "start": false,
+            "game_over": true
+        },
+        "55": {
+            "title": "55",
+            "description": "",
+            "start": false,
+            "game_over": true
+        }
+    },
+    "connectors": [
+        {
+          "to_id": "1",
+          "from_id": "0",
+          "direction": "north"
+        },
+        {
+          "to_id": "0",
+          "from_id": "1",
+          "direction": "south"
+        },
+        {
+          "to_id": "4",
+          "from_id": "2",
+          "direction": "north"
+        },
+        {
+          "to_id": "2",
+          "from_id": "4",
+          "direction": "south"
+        },
+        {
+          "to_id": "8",
+          "from_id": "9",
+          "direction": "north"
+        },
+        {
+          "to_id": "9",
+          "from_id": "8",
+          "direction": "south"
+        },
+        {
+          "to_id": "10",
+          "from_id": "8",
+          "direction": "north"
+        },
+        {
+          "to_id": "8",
+          "from_id": "10",
+          "direction": "south"
+        },
+        {
+          "to_id": "11",
+          "from_id": "10",
+          "direction": "east"
+        },
+        {
+          "to_id": "10",
+          "from_id": "11",
+          "direction": "west"
+        },
+        {
+          "to_id": "7",
+          "from_id": "8",
+          "direction": "east"
+        },
+        {
+          "to_id": "8",
+          "from_id": "7",
+          "direction": "west"
+        },
+        {
+          "to_id": "5",
+          "from_id": "4",
+          "direction": "east"
+        },
+        {
+          "to_id": "4",
+          "from_id": "5",
+          "direction": "west"
+        },
+        {
+          "to_id": "1",
+          "from_id": "2",
+          "direction": "east"
+        },
+        {
+          "to_id": "2",
+          "from_id": "1",
+          "direction": "west"
+        },
+        {
+          "to_id": "5",
+          "from_id": "6",
+          "direction": "south"
+        },
+        {
+          "to_id": "6",
+          "from_id": "5",
+          "direction": "north"
+        },
+        {
+          "to_id": "7",
+          "from_id": "6",
+          "direction": "north"
+        },
+        {
+          "to_id": "6",
+          "from_id": "7",
+          "direction": "south"
+        },
+        {
+          "to_id": "12",
+          "from_id": "11",
+          "direction": "east"
+        },
+        {
+          "to_id": "11",
+          "from_id": "12",
+          "direction": "west"
+        },
+        {
+          "to_id": "20",
+          "from_id": "6",
+          "direction": "east"
+        },
+        {
+          "to_id": "21",
+          "from_id": "5",
+          "direction": "east"
+        },
+        {
+          "to_id": "5",
+          "from_id": "21",
+          "direction": "west"
+        },
+        {
+          "to_id": "3",
+          "from_id": "1",
+          "direction": "east"
+        },
+        {
+          "to_id": "1",
+          "from_id": "3",
+          "direction": "west"
+        },
+        {
+          "to_id": "25",
+          "from_id": "0",
+          "direction": "east",
+          "key_id": "barred"
+        },
+        {
+          "to_id": "0",
+          "from_id": "25",
+          "direction": "west",
+          "key_id": "barred"
+        },
+        {
+          "to_id": "21",
+          "from_id": "3",
+          "direction": "north"
+        },
+        {
+          "to_id": "3",
+          "from_id": "21",
+          "direction": "south"
+        },
+        {
+          "to_id": "12",
+          "from_id": "13",
+          "direction": "north"
+        },
+        {
+          "to_id": "13",
+          "from_id": "12",
+          "direction": "south"
+        },
+        {
+          "to_id": "14",
+          "from_id": "13",
+          "direction": "east"
+        },
+        {
+          "to_id": "13",
+          "from_id": "14",
+          "direction": "west"
+        },
+        {
+          "to_id": "20",
+          "from_id": "18",
+          "direction": "west"
+        },
+        {
+          "to_id": "21",
+          "from_id": "19",
+          "direction": "west"
+        },
+        {
+          "to_id": "19",
+          "from_id": "21",
+          "direction": "east"
+        },
+        {
+          "to_id": "24",
+          "from_id": "25",
+          "direction": "east"
+        },
+        {
+          "to_id": "25",
+          "from_id": "24",
+          "direction": "west"
+        },
+        {
+          "to_id": "22",
+          "from_id": "24",
+          "direction": "north"
+        },
+        {
+          "to_id": "24",
+          "from_id": "22",
+          "direction": "south"
+        },
+        {
+          "to_id": "19",
+          "from_id": "22",
+          "direction": "north"
+        },
+        {
+          "to_id": "22",
+          "from_id": "19",
+          "direction": "south"
+        },
+        {
+          "to_id": "18",
+          "from_id": "19",
+          "direction": "north"
+        },
+        {
+          "to_id": "19",
+          "from_id": "18",
+          "direction": "south"
+        },
+        {
+          "to_id": "14",
+          "from_id": "18",
+          "direction": "north"
+        },
+        {
+          "to_id": "18",
+          "from_id": "14",
+          "direction": "south"
+        },
+        {
+          "to_id": "15",
+          "from_id": "14",
+          "direction": "north"
+        },
+        {
+          "to_id": "14",
+          "from_id": "15",
+          "direction": "south"
+        },
+        {
+          "to_id": "17",
+          "from_id": "15",
+          "direction": "north"
+        },
+        {
+          "to_id": "16",
+          "from_id": "15",
+          "direction": "east"
+        },
+        {
+          "to_id": "15",
+          "from_id": "16",
+          "direction": "west"
+        },
+        {
+          "to_id": "29",
+          "from_id": "14",
+          "direction": "east"
+        },
+        {
+          "to_id": "14",
+          "from_id": "29",
+          "direction": "west"
+        },
+        {
+          "to_id": "23",
+          "from_id": "19",
+          "direction": "east"
+        },
+        {
+          "to_id": "19",
+          "from_id": "23",
+          "direction": "west"
+        },
+        {
+          "to_id": "28",
+          "from_id": "22",
+          "direction": "east"
+        },
+        {
+          "to_id": "22",
+          "from_id": "28",
+          "direction": "west"
+        },
+        {
+          "to_id": "26",
+          "from_id": "24",
+          "direction": "east"
+        },
+        {
+          "to_id": "24",
+          "from_id": "26",
+          "direction": "west"
+        },
+        {
+          "to_id": "23",
+          "from_id": "28",
+          "direction": "north"
+        },
+        {
+          "to_id": "27",
+          "from_id": "26",
+          "direction": "south"
+        },
+        {
+          "to_id": "28",
+          "from_id": "23",
+          "direction": "south"
+        },
+        {
+          "to_id": "31",
+          "from_id": "29",
+          "direction": "east"
+        },
+        {
+          "to_id": "29",
+          "from_id": "31",
+          "direction": "west"
+        },
+        {
+          "to_id": "35",
+          "from_id": "32",
+          "direction": "west"
+        },
+        {
+          "to_id": "34",
+          "from_id": "28",
+          "direction": "east"
+        },
+        {
+          "to_id": "28",
+          "from_id": "34",
+          "direction": "west"
+        },
+        {
+          "to_id": "36",
+          "from_id": "26",
+          "direction": "east"
+        },
+        {
+          "to_id": "26",
+          "from_id": "36",
+          "direction": "west"
+        },
+        {
+          "to_id": "34",
+          "from_id": "36",
+          "direction": "north"
+        },
+        {
+          "to_id": "36",
+          "from_id": "34",
+          "direction": "south"
+        },
+        {
+          "to_id": "33",
+          "from_id": "34",
+          "direction": "north"
+        },
+        {
+          "to_id": "34",
+          "from_id": "33",
+          "direction": "south"
+        },
+        {
+          "to_id": "32",
+          "from_id": "33",
+          "direction": "north"
+        },
+        {
+          "to_id": "33",
+          "from_id": "32",
+          "direction": "south"
+        },
+        {
+          "to_id": "31",
+          "from_id": "32",
+          "direction": "north"
+        },
+        {
+          "to_id": "32",
+          "from_id": "31",
+          "direction": "south"
+        },
+        {
+          "to_id": "32",
+          "from_id": "39",
+          "direction": "west"
+        },
+        {
+          "to_id": "30",
+          "from_id": "31",
+          "direction": "north"
+        },
+        {
+          "to_id": "31",
+          "from_id": "30",
+          "direction": "south"
+        },
+        {
+          "to_id": "37",
+          "from_id": "30",
+          "direction": "east"
+        },
+        {
+          "to_id": "30",
+          "from_id": "37",
+          "direction": "west"
+        },
+        {
+          "to_id": "38",
+          "from_id": "37",
+          "direction": "south"
+        },
+        {
+          "to_id": "37",
+          "from_id": "38",
+          "direction": "north"
+        },
+        {
+          "to_id": "39",
+          "from_id": "32",
+          "direction": "east"
+        },
+        {
+          "to_id": "38",
+          "from_id": "39",
+          "direction": "north"
+        },
+        {
+          "to_id": "39",
+          "from_id": "38",
+          "direction": "south"
+        },
+        {
+          "to_id": "41",
+          "from_id": "40",
+          "direction": "south"
+        },
+        {
+          "to_id": "40",
+          "from_id": "41",
+          "direction": "north"
+        },
+        {
+          "to_id": "41",
+          "from_id": "42",
+          "direction": "north"
+        },
+        {
+          "to_id": "42",
+          "from_id": "41",
+          "direction": "south"
+        },
+        {
+          "to_id": "55",
+          "from_id": "42",
+          "direction": "south"
+        },
+        {
+          "to_id": "52",
+          "from_id": "41",
+          "direction": "east"
+        },
+        {
+          "to_id": "41",
+          "from_id": "52",
+          "direction": "west"
+        },
+        {
+          "to_id": "47",
+          "from_id": "39",
+          "direction": "east"
+        },
+        {
+          "to_id": "39",
+          "from_id": "47",
+          "direction": "west"
+        },
+        {
+          "to_id": "45",
+          "from_id": "38",
+          "direction": "east"
+        },
+        {
+          "to_id": "38",
+          "from_id": "45",
+          "direction": "west"
+        },
+        {
+          "to_id": "45",
+          "from_id": "43",
+          "direction": "south"
+        },
+        {
+          "to_id": "43",
+          "from_id": "45",
+          "direction": "north"
+        },
+        {
+          "to_id": "45",
+          "from_id": "47",
+          "direction": "north"
+        },
+        {
+          "to_id": "47",
+          "from_id": "45",
+          "direction": "south"
+        },
+        {
+          "to_id": "47",
+          "from_id": "49",
+          "direction": "north"
+        },
+        {
+          "to_id": "49",
+          "from_id": "47",
+          "direction": "south"
+        },
+        {
+          "to_id": "49",
+          "from_id": "52",
+          "direction": "north"
+        },
+        {
+          "to_id": "52",
+          "from_id": "49",
+          "direction": "south"
+        },
+        {
+          "to_id": "53",
+          "from_id": "52",
+          "direction": "south"
+        },
+        {
+          "to_id": "54",
+          "from_id": "52",
+          "direction": "east"
+        },
+        {
+          "to_id": "50",
+          "from_id": "49",
+          "direction": "east"
+        },
+        {
+          "to_id": "49",
+          "from_id": "50",
+          "direction": "west"
+        },
+        {
+          "to_id": "48",
+          "from_id": "47",
+          "direction": "east"
+        },
+        {
+          "to_id": "47",
+          "from_id": "48",
+          "direction": "west"
+        },
+        {
+          "to_id": "44",
+          "from_id": "43",
+          "direction": "east"
+        },
+        {
+          "to_id": "46",
+          "from_id": "48",
+          "direction": "north"
+        },
+        {
+          "to_id": "48",
+          "from_id": "50",
+          "direction": "north"
+        },
+        {
+          "to_id": "50",
+          "from_id": "48",
+          "direction": "south"
+        },
+        {
+          "to_id": "51",
+          "from_id": "50",
+          "direction": "east"
+        }
+    ],
+    "items": [
+
+    ],
+    "characters": [
+
+    ]
 }
