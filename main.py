@@ -40,9 +40,9 @@ class controller(object):
     def setup(self, args):
         self._clear_screen()
         # TODO Uncomment to set player name dynamically
-        #choice = input("What is your name? (Leave blank for default) ")
-        #if len(choice) > 0:
-        #    self.player.set_name(choice)
+        choice = input("What is your name? (Leave blank for default) ")
+        if len(choice) > 0:
+            self.player.set_name(choice)
         self._clear_screen()
         print("Hello, {name}".format(name=self.player.name))
         print("Welcome to {world}".format(world=self.world.title))
@@ -161,6 +161,7 @@ class controller(object):
             return ("Prompt Input", args)
         # Look around
         if choice.lower() == 'look' or choice.lower() == 'look around':
+            args['current_zone'].describe(args)
             args['current_zone'].look()
             return ("Prompt Input", args)
         # Pickup Item
